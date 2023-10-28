@@ -1,44 +1,48 @@
 package aes
 
-import BitByte.Companion.toByteString
-import BitByte.Companion.xor
+import agno.FileScanner
+import agno.KeyGen
+import agno.KeyTester
 
 object Main {
+  private const val VERBOSE = true
+
   @JvmStatic
   fun main(args: Array<String>) {
-    drill("cypher/resources/message2.txt")
+    drill("cypher/resources/messages/message1.txt")
   }
 
-  private fun drill(path: String, verbose: Boolean = true) {
-    val plainText = FileScanner.fileToText(path)
+  @Suppress("SameParameterValue")
+  private fun drill(path: String) {
     val plain = FileScanner.fileToBitBytes(path)
-    val byteLen = plain.size
+    val plainText = plain.toText().andPrint("plainText")
+    val plainHex = plain.toHexString().andPrint("plainHex")
+    val byteLen = plain.byteN
 
-    val key = KeyRing.generateKey(byteLen)
-//    val key = KeyRing.generateKeyUnsafe(byteLen)
-    val keyText = key.toByteString()
+    val key = KeyGen.generateKey(byteLen)
+    val keyText = key.toText()
+    val keyHex = key.toHexString().andPrint(">>keyHex")
 
     val cypher = plain xor key
-    val cypherText = cypher.toByteString()
+    val cypherText = cypher.toText()
+    val cypherHex = cypher.toHexString().andPrint(">cyphHex")
 
     val plainAgain = cypher xor key
-    val plainAgainText = plainAgain.toByteString()
+    val plainAgainHex = plainAgain.toHexString().andPrint("paganHex")
+    val plainAgainText = plainAgain.toText().andPrint("plainAgain")
 
-    if (verbose) {
-      println("---")
-      println("plainText = $plainText")
-      println("keyText = $keyText")
-      println("cypherText = $cypherText")
-      println("plainAgainText = $plainAgainText")
-      println()
+    if (VERBOSE) {
       println("Plaintext diff? ${plainText diff plainAgainText}")
       println("Is key random (monobit test)? ${KeyTester.monobitTest(key).toWord()}")
-      println("---")
     }
-
   }
 
   private fun Boolean.toWord() = if (this) "Yes" else "No"
+
+  private fun String.andPrint(name: String): String {
+    if (VERBOSE) println("$name=$this")
+    return this
+  }
 
   private infix fun String.diff(other: String): Int {
     val minLen = kotlin.math.min(this.length, other.length)

@@ -1,6 +1,6 @@
 package agno
 
-@Suppress("MemberVisibilityCanBePrivate")
+@Suppress("MemberVisibilityCanBePrivate", "unused")
 class BitByteList(private val bitBytes: List<BitByte>) {
   constructor(vararg bitBytes: BitByte) : this(bitBytes.asList())
 
@@ -60,9 +60,20 @@ class BitByteList(private val bitBytes: List<BitByte>) {
 
   fun toList(): List<BitByte> = bitBytes
 
+  fun toByteArray(): ByteArray = toList().map { it.toByte() }.toByteArray()
+
+  fun toBinString(): String = bitBytes.joinToString(separator = "") { it.toBinString() }
+
+  fun toHexString(): String = bitBytes.joinToString(separator = "") { it.toHexString() }
+
+  fun toText(): String = toByteArray().toString(Consts.CHARSET)
+
+
+  override fun toString(): String = "BitByteList(${toHexString()})"
+
 
   companion object {
     fun from(byteArray: ByteArray): BitByteList =
-      BitByteList(byteArray.map { BitByte(it) })
+      BitByteList(byteArray.map { BitByte(it.toUByte()) })
   }
 }

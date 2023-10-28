@@ -1,5 +1,5 @@
 package agno
 
 object Consts {
-  val CHARSET = Charsets.US_ASCII
+  val CHARSET = Charsets.UTF_8
 }
