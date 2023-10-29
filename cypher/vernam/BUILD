@@ -7,7 +7,7 @@ MESSAGES = [
 
 kt_jvm_binary(
     name = "main",
-    main_class = "aes.Main",
+    main_class = "vernam.Main",
     srcs = ["Main.kt"],
     deps = ["@//cypher/agno:full"],
     data = MESSAGES,
