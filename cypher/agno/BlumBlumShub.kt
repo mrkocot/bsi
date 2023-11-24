@@ -46,4 +46,8 @@ class BlumBlumShub(pBitLen: Int, qBitLen: Int) : Random() {
       this.lastX = it
       it % BigInteger.TWO == BigInteger.ZERO
     }
+
+  companion object {
+    fun defaultConfig(): BlumBlumShub = BlumBlumShub(128,256)
+  }
 }

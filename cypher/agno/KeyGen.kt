@@ -3,7 +3,7 @@ package agno
 import java.util.Random
 
 object KeyGen {
-  private val RGen = BlumBlumShub(128, 256)
+  private val RGen = BlumBlumShub.defaultConfig()
 
   fun generateKey(byteLen: Int): BitByteList {
     val bytes = ByteArray(byteLen).apply {

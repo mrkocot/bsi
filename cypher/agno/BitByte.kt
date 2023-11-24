@@ -79,6 +79,7 @@ data class BitByte(
 
   companion object {
     val ZERO = BitByte(0)
+    val FULL = BitByte(0xFF)
 
     fun List<BitByte>.toByteString(): String =
       this.toByteArray().toString(Consts.CHARSET)

@@ -1,11 +1,21 @@
 package agno
 
+import java.math.BigInteger
+
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 class BitByteList(private val bitBytes: List<BitByte>) {
   constructor(vararg bitBytes: BitByte) : this(bitBytes.asList())
 
   val byteN = bitBytes.size
   val bitN = byteN * 8
+
+
+  operator fun plus(other: BitByteList): BitByteList =
+    BitByteList(bitBytes + other.toList())
+
+  operator fun get(index: Int): BitByte =
+    bitBytes[index]
+
 
   fun zip(other: BitByteList, function: (BitByte, BitByte) -> BitByte): BitByteList =
     if (this.byteN == other.byteN) {
@@ -68,6 +78,38 @@ class BitByteList(private val bitBytes: List<BitByte>) {
 
   fun toText(): String = toByteArray().toString(Consts.CHARSET)
 
+  fun toBigInteger(): BigInteger {
+    var ret = BigInteger.ZERO
+    bitBytes.forEach {
+      ret = ret.shiftLeft(8)
+      ret += it.uByte.toInt().toBigInteger()
+    }
+    return ret
+  }
+
+
+  /** Pad so that byte length is divisible by lenDiv. Pad is a single 0xFF, and then zero or more 0x00s */
+  fun pad(lenDiv: Int): BitByteList {
+    val lenWith0xFF = byteN + 1
+    val required0s =
+      if (lenWith0xFF % lenDiv != 0) {
+        lenWith0xFF - (lenWith0xFF % lenDiv)
+      } else 0
+    val pad = mutableListOf(BitByte.FULL)
+    repeat(required0s) { pad.add(BitByte.ZERO) }
+    return BitByteList(this.bitBytes + pad)
+  }
+
+  /** Removes 0xFF 0x00 0x00... padding. Should not be used on a non-padded BitByteList */
+  fun depad(): BitByteList =
+    BitByteList(bitBytes.dropLastWhile { it == BitByte.ZERO }.dropLast(1))
+
+  fun subList(fromIndex: Int, toIndex: Int): BitByteList =
+    BitByteList(bitBytes.subList(fromIndex, toIndex))
+
+  fun chunked(size: Int): List<BitByteList> =
+    bitBytes.chunked(size).map { BitByteList(it) }
+
 
   override fun toString(): String = "BitByteList(${toHexString()})"
 
@@ -75,5 +117,20 @@ class BitByteList(private val bitBytes: List<BitByte>) {
   companion object {
     fun from(byteArray: ByteArray): BitByteList =
       BitByteList(byteArray.map { BitByte(it.toUByte()) })
+
+    fun from(bigInteger: BigInteger): BitByteList = from(bigInteger.toByteArray())
+
+    fun from(bigInteger: BigInteger, expectedLen: Int): BitByteList {
+      var bytes = bigInteger.toByteArray().dropWhile { it.compareTo(0) == 0 }.toByteArray()
+      if (bytes.size > expectedLen) {
+        error("Tried to make $expectedLen bytes from a BigInteger too large")
+      } else {
+        while (bytes.size < expectedLen) bytes = byteArrayOf(0) + bytes
+      }
+      return from(bytes)
+    }
+
+    fun fromMultiple(others: List<BitByteList>): BitByteList =
+      others.fold(BitByteList(emptyList())) { acc, next -> acc + next }
   }
 }
