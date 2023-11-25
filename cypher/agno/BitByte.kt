@@ -46,16 +46,26 @@ data class BitByte(
   infix fun shiftRight(bitCount: Int): BitByte = shiftRight(bitCount, ZERO)
 
   fun shiftRight(bitCount: Int, fill: BitByte): BitByte {
-    val glued = fill.toInt() * 0b100 + this.toInt()
+    val glued = fill.toInt() * 0x100 + this.toInt()
     return BitByte(glued shr bitCount)
   }
 
   infix fun shiftLeft(bitCount: Int): BitByte = shiftLeft(bitCount, ZERO)
 
   fun shiftLeft(bitCount: Int, fill: BitByte): BitByte {
-    val glued = this.toInt() * 0b100 + fill.toInt()
+    val glued = this.toInt() * 0x100 + fill.toInt()
     return BitByte((glued shl bitCount) shr 8)
   }
+
+  fun reverse(): BitByte {
+    var neo = 0
+    repeat(8) {
+      neo *= 0b10
+      neo += if (this[it]) 1 else 0
+    }
+    return BitByte(neo)
+  }
+
 
   fun toByte(): Byte = uByte.toByte()
 
@@ -79,6 +89,8 @@ data class BitByte(
 
   companion object {
     val ZERO = BitByte(0)
+    val ONE = BitByte(1)
+    val MSB = BitByte(0x80)
     val FULL = BitByte(0xFF)
 
     fun List<BitByte>.toByteString(): String =
