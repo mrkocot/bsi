@@ -7,5 +7,8 @@ package (
 kt_jvm_library (
     name = "full",
     srcs = glob(["*.kt"]),
-    deps = ["@maven//:org_apache_commons_commons_math3"],
+    deps = [
+        "@maven//:org_apache_commons_commons_math3",
+        "@maven//:org_apache_commons_commons_numbers_gamma",
+    ],
 )

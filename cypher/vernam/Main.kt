@@ -34,10 +34,11 @@ object Main {
     if (VERBOSE) {
       println("Plaintext diff? ${plainText diff plainAgainText}")
       println("Is key random (monobit test)? ${KeyTester.monobitTest(key).toWord()}")
+      println("Is key random (serial test)? ${KeyTester.serialTest(key).toWord()}")
     }
   }
 
-  private fun Boolean.toWord() = if (this) "Yes" else "No"
+  private fun Pair<Boolean, String>.toWord() = (if (this.first) "Yes" else "No") + " [${this.second}]"
 
   private fun String.andPrint(name: String): String {
     if (VERBOSE) println("$name=$this")
