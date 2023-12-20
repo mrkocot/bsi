@@ -1,1 +1,1 @@
-exports_files(glob(["messages/*.txt"]))
+exports_files(glob(["messages/*.txt", "images/*.jpg"]))

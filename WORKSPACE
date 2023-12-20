@@ -30,10 +30,12 @@ maven_install(
     artifacts = [
         "junit:junit:4.12",
         "org.apache.commons:commons-math3:3.6.1",  # transitive CVE-2020-15250
+        "org.bouncycastle:bcprov-jdk18on:1.77",
     ],
     fetch_sources = True,
     repositories = [
         "https://repo.maven.apache.org/maven2",
+        "https://repo1.maven.org/maven2",
     ],
 )
 
