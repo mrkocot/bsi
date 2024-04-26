@@ -1,0 +1,2 @@
+pandoc -s -c markdown.css --metadata title="Vernam" vernam.md -o htmls/vernam.html
+pandoc -s -c markdown.css vernam.md -o htmls/vernam.html

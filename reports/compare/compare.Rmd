@@ -1,0 +1,183 @@
+---
+title: "AES vs 3DES vs RSA"
+output: pdf_document
+---
+
+*Marcin Kocot*
+
+Zadanie wykonano w języku Kotlin, przy użyciu build-toola Bazel.
+
+---
+
+```{r, echo=FALSE}
+library(ggplot2)
+library(tidyr)
+library(RColorBrewer)
+
+data <- read.csv('result.csv', strip.white=TRUE)
+source_df <- as.data.frame(data)
+source_df$Microseconds <- source_df$Nanoseconds / 1000
+source_df$Milliseconds <- source_df$Nanoseconds / 1000000
+source_df$Seconds <- source_df$Nanoseconds / 1000000000
+
+keygen_df <- source_df[source_df$Test == 'keygen',]
+encode_df <- source_df[source_df$Test == 'encoding',]
+decode_df <- source_df[source_df$Test == 'decoding',]
+
+colours <- c("#CC0000", "#00DD00", "#008000", "#004d00", "#99CCFF", "#6699FF", "#3366FF", "#0000AA")
+```
+
+```{r, echo=FALSE}
+options(scipen = 999)  # disable scientific notation
+```
+
+## Implementacja
+Wykorzystano bibliotekę `javax.crypto.Cipher` - pozwala ona na łatwe użycie wszystkich najpopularniejszych algorytmów szyfrujących. W porównaniu udział brały:
+
+* AES (`AES/CBC/PKCS5Padding`)
+  * AES128
+  * AES192
+  * AES256
+* 3DES (`TripleDES/CBC/PKCS5Padding`)
+* RSA
+  * RSA512
+  * RSA1024
+  * RSA2048
+  * RSA4096
+
+Utworzono abstrakcyjną klasę odpowiedzialną za pomiary, a implementacje poszczególnych algorytmów dostarczały tylko metod generujących klucze, syfrujących i deszyfrujących. Dzięki temu każdy lagorytm był mierzony w dokładnie ten sam sposób. Wszystkie pomiary były przeprowadzone na procesorze Apple M1 z 16GB pamięci RAM. Przy wszystkich uruchomieniach maszyna wirtualna Javy (JVM) miała tę samą konfigurację i stałe zużycie zasobów - dlatego też pod uwagę będzie brany głównie czas.
+
+---
+
+## Pomiary
+Żeby zminimalizować wpływ czynników losowych na pomiary, każdy przeprowadzono dziesięć razy, a wyniki uśredniono.
+
+```{r, echo=FALSE}
+time_gg <- function(data_, aes_) {
+  plot <- ggplot(data_, aes_) +
+  theme_bw() +
+  geom_col(position = 'dodge') +
+  scale_x_log10(breaks=data_$Size) +
+  scale_fill_manual(values = colours)
+}
+
+time_gg_ylim <- function(data_, aes_, ylim_) {
+  time_gg(data_, aes_) + coord_cartesian(ylim = c(0, ylim_))
+}
+```
+
+### Generacja kluczy
+Pomiary przeprowadzono dla generacji 1, 10, 100 i 1000 kluczy. Wyjątkiem jest `RSA4096`, dla którego pominięto największy test (ponieważ trwałby on bardzo długo).
+
+```{r, echo=FALSE}
+time_gg(keygen_df, aes(x=Size, y=Seconds, fill=Algorithm)) +
+  labs(title='Generacja kluczy', x='Liczba kluczy', y='Czas [s]', fill='Algorytm')
+```
+
+```{r, echo=FALSE}
+time_gg_ylim(keygen_df, aes(x=Size, y=Seconds, fill=Algorithm), 5) +
+  labs(title='Generacja kluczy', x='Liczba kluczy', y='Czas [s]', fill='Algorytm')
+```
+
+```{r, echo=FALSE}
+time_gg_ylim(keygen_df, aes(x=Size, y=Milliseconds, fill=Algorithm), 500) +
+  labs(title='Generacja kluczy', x='Liczba kluczy', y='Czas [ms]', fill='Algorytm')
+```
+
+```{r, echo=FALSE}
+time_gg_ylim(keygen_df, aes(x=Size, y=Milliseconds, fill=Algorithm), 4) +
+  labs(title='Generacja kluczy', x='Liczba kluczy', y='Czas [ms]', fill='Algorytm')
+```
+
+Biorąc pod uwagę czas potrzebny na generację kluczy, szyfry symetryczne (`3DES` i `AES`) wypadają dużo lepiej. Wynika to z faktu, że dla nich generacja klucza wymaga wyłącznie utworzenia odpowiednio długiego ciągu bajtów, co jest w stanie wykonać dowolny generator liczb losowych. `RSA` musi znaleźć odpowiednio duże liczby pierwsze, co zajmuje dużo więcej czasu. Ciekawą obserwacją jest fakt, że długość generacji klucza `AES` zdaje się nie zależeć od jego długości.
+
+### Szyfrowanie
+Pomiary przeprowadzono dla 1, 10, (...), 100 tys. i miliona znaków długości tekstu do zaszyfrowania. Niestety, bez ręcznego podziały wiadomości na bloki, testowanie `RSA` na wiadomościach o długości tysiąca znaków lub więcej nie było możliwe.
+
+```{r, echo=FALSE}
+time_gg(encode_df, aes(x=Size, y=Milliseconds, fill=Algorithm)) +
+  labs(title='Szyfrowanie', x='Długość wiadomości', y='Czas [ms]', fill='Algorytm') +
+  coord_cartesian(xlim = c(0.4, 250), ylim = c(0, 5))
+```
+
+Możliwym powodem dlaczego szyfrowanie `RSA` jest szybsze dla dłuższych wiadomości jest fakt, że wiadomości wymagają paddingu - im krótsza wiadomość, tym potrzeba go więcej.
+
+```{r, echo=FALSE}
+time_gg(encode_df, aes(x=Size, y=Microseconds, fill=Algorithm)) +
+  labs(title='Szyfrowanie', x='Długość wiadomości', y='Czas [μs]', fill='Algorytm') +
+  coord_cartesian(xlim = c(0.4, 250), ylim = c(0, 500))
+```
+
+Szyfrowanie dla `RSA` (oprócz `RSA4096`) trwało porównywalnie do szyfrów symetrycznych. Nie powinno się jednak wysnuwać wniosku, że są one tak samo szybkie. Załóżmy, że skoro zaszyfrowanie długich wiadomości za pomocą `RSA` wymaga podziału na bloki i przetworzenia ich osobno, zaszyfrowanie dziesięciokrotnie dłuższej wiadomości zajmie dziesięciokrotność czasu.
+
+```{r, echo=FALSE}
+time_gg(encode_df, aes(x=Size, y=Milliseconds, fill=Algorithm)) +
+  labs(title='Szyfrowanie', x='Długość wiadomości', y='Czas [ms]', fill='Algorytm')
+```
+
+```{r, echo=FALSE}
+time_gg_ylim(encode_df, aes(x=Size, y=Milliseconds, fill=Algorithm), 10) +
+  labs(title='Szyfrowanie', x='Długość wiadomości', y='Czas [ms]', fill='Algorytm')
+```
+
+```{r, echo=FALSE}
+time_gg_ylim(encode_df, aes(x=Size, y=Milliseconds, fill=Algorithm), 2) +
+  labs(title='Szyfrowanie', x='Długość wiadomości', y='Czas [ms]', fill='Algorytm')
+```
+
+Idąc tym rozumowaniem, zaszyfrownie wiadomości o długości miliona znaków zajęłoby:
+
+* 84,6 milisekund używając `3DES`
+* 2,6 milisekundy za pomocą `AES256`
+* 212 milisekund algorytmem `RSA1024`
+* 670 milisekund przy użyciu `RSA2048`
+* 6,9 sekundy (6926 milisekund) wykorzystując `RSA4096`
+
+Dlatego też pod względem szybkości szyfrowania szyfry symetryczne wypadają dużo lepiej.
+
+### Deszyfrowanie
+Przetestowano te same długości wiadomości co w przypadku szyfrowania.
+
+```{r, echo=FALSE}
+time_gg(decode_df, aes(x=Size, y=Milliseconds, fill=Algorithm)) +
+  labs(title='Deszyfrowanie', x='Długość wiadomości', y='Czas [ms]', fill='Algorytm') +
+  coord_cartesian(xlim = c(0.4, 250), ylim = c(0, 25))
+```
+
+Zachodzi tu ta sama zależność co przy szyfrowaniu - krótsze wiadomości wymagają więcej czasu. Dodatkowo, odszyfrowywanie za pomocą algorytmu `RSA` jest dużo (ponad pięciokrotnie) dłuższe od szyfrowania - wynika to z faktu, że ta operacja jest w tym algorytmie bardziej złożona, a klucz prywatny jest dłuższy od publicznego. Przeprowadźmy tu tę samą analizę co przy szyfrowaniu:
+
+```{r, echo=FALSE}
+time_gg_ylim(decode_df, aes(x=Size, y=Milliseconds, fill=Algorithm), 25) +
+  labs(title='Deszyfrowanie', x='Długość wiadomości', y='Czas [ms]', fill='Algorytm')
+```
+
+```{r, echo=FALSE}
+time_gg_ylim(decode_df, aes(x=Size, y=Milliseconds, fill=Algorithm), 2.5) +
+  labs(title='Deszyfrowanie', x='Długość wiadomości', y='Czas [ms]', fill='Algorytm')
+```
+
+```{r, echo=FALSE}
+time_gg_ylim(decode_df, aes(x=Size, y=Microseconds, fill=Algorithm), 500) +
+  labs(title='Deszyfrowanie', x='Długość wiadomości', y='Czas [μs]', fill='Algorytm')
+```
+
+```{r, echo=FALSE}
+time_gg_ylim(decode_df, aes(x=Size, y=Microseconds, fill=Algorithm), 50) +
+  labs(title='Deszyfrowanie', x='Długość wiadomości', y='Czas [μs]', fill='Algorytm')
+```
+
+Tutaj sytuacja jest inna niż w przypadku szyfrowania - asymetryczny wymagał znacznie więcej czasu niż symetryczne. Przeliczając czasy w ten sam sposób co przy szyfrowaniu uzyskano następujące wyniki dla wiadomości o długości miliona znaków:
+
+* 84,5 milisekund używając `3DES`
+* 2 milisekundy za pomocą `AES256`
+* 2,7 sekundy algorytmem `RSA1024`
+* 13 sekund przy użyciu `RSA2048`
+* 1 minutę 36 sekund (96110 milisekund) wykorzystując `RSA4096`
+
+---
+
+## Wnioski
+Zarówno w przypadku generacji kluczy, szyfrowania jak i deszyfrowania, algorytm `RSA` był zawsze wolniejszy od algorytmów `AES` i `3DES`, czasem nawet o całe rzędy wielkości - jest to zgodne z analizami w artykułach naukowych przedstawionych na zajęciach. Przyjmując czas jako jedyne kryterium, ukazuje to szyfry symetryczne jako dużo lepsze. Jeśli jednak weźmie się pod uwagę także różnicę w zastosowaniach tych algorytmów, uznanie któregokolwiek za lepszy jest trudne. Na podstawie powyższych wyników można jednak uargumentować zasadność używania szyfrów hybrydowych - symetrycznych, z kluczem wysyłanym za pomocą asymetrycznego. Łączy to, mówiąc kolokwialnie, "najlepsze z obu światów", jako że można go zastosować tak jak szyfr asymetryczny, ale korzysta z zaobserwowanej tutaj wydajności algorytmów symetrycznych.
+
+Jeśli przyjrzymy się jak w tym porównaniu wychodzą szyfry symetryczne, to w większości pomiarów wszystkie rodzaje algorytmu `AES` były szybsze od `3DES`, z różnicą dochodzącą do dwudziestokrotnej. Jako że należą do tej samej rodziny, szyfr `AES256` można uznać za najlepszy z przetestowanych - działa szybko, a jest znacznie bezpieczniejszy niż jego mniejsze odpowiedniki (`AES128` i `AES196`).
+
