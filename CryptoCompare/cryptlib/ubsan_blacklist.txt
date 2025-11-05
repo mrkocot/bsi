@@ -1,0 +1,6 @@
+# The SHA-2 code relies on bits being shifted off the end of a word
+src:crypt/sha2.c
+
+# The Bignum self-test code tests overlaying of different BIGNUM structures,
+# which looks like an out-of-bounds access
+fun:selfTestBignumFields

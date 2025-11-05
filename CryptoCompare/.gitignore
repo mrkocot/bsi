@@ -1,0 +1,8 @@
+/cmake-build-debug/
+/.idea/
+
+# Outputs (not the best place for these, but works)
+/resources/3des/
+/resources/aes/
+/resources/elgamal/
+/resources/rsa/
