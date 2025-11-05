@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BouncyCastle &amp; CryptLib</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="markdown.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">BouncyCastle &amp; CryptLib</h1>
+</header>
+<p><em>Marcin Kocot</em></p>
+<p>Użyto następujących bibliotek kryptograficznych:</p>
+<ul>
+<li><code>BouncyCastle</code> dla języka Java (użyto siostrzanego języka
+Kotlin)</li>
+<li><code>CryptLib</code> dla języka C (użyto języka C)</li>
+</ul>
+<hr />
+<h2 id="testy">Testy</h2>
+<p>Szyfrowanie symetryczne, haszowanie oraz podpis cyfrowy wykonywane
+były na następującym obrazku w formacie JPG:</p>
+<p><img src="raccoon.jpg" /></p>
+<p>Szyfrowanie asymetryczne testowane było na krótkich tekstach w języku
+Polskim bądź Kantońskim.</p>
+<hr />
+<h2 id="bouncy-castle">Bouncy Castle</h2>
+<h3 id="szyfr-symetryczny---3des">Szyfr symetryczny - 3DES</h3>
+<p>Oba szyfry symetryczne korzystają ze wspólnej funkcji
+<code>performSymmetric</code>:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">fun</span> <span class="fu">performSymmetric</span><span class="op">(</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="va">files</span><span class="op">:</span> <span class="dt">Pair</span>&lt;<span class="va">String</span><span class="op">,</span> <span class="va">String</span>&gt;<span class="op">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">key</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="va">algo</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="va">transformation</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="va">shouldDecrypt</span><span class="op">:</span> <span class="dt">Boolean</span><span class="op">,</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="va">iv</span><span class="op">:</span> <span class="dt">ByteArray</span><span class="op">?,</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">):</span> <span class="dt">ByteArray</span> <span class="op">{</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">beforeData</span> <span class="op">=</span> readFrom<span class="op">(</span>files<span class="op">.</span>first<span class="op">)</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">secretKeySpec</span> <span class="op">=</span> SecretKeySpec<span class="op">(</span>key<span class="op">.</span>toByteArray<span class="op">(</span>Charsets<span class="op">.</span>US_ASCII<span class="op">),</span> algo<span class="op">)</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">cipher</span> <span class="op">=</span> getCipher<span class="op">(</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      secretKeySpec<span class="op">,</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      transformation<span class="op">,</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>      shouldDecrypt<span class="op">,</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>      iv<span class="op">?.</span>let <span class="op">{</span> OptionalIvWrapper<span class="op">.</span>IHaveIt<span class="op">(</span>it<span class="op">)</span> <span class="op">}</span> <span class="op">?:</span> OptionalIvWrapper<span class="op">.</span>PleaseGenerate<span class="op">,</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">)</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    cipher<span class="op">.</span>doFinal<span class="op">(</span>beforeData<span class="op">).</span>writeToBouncy<span class="op">(</span>files<span class="op">.</span>second<span class="op">)</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">return</span> cipher<span class="op">.</span>iv</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">perform3DES</span><span class="op">(</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">files</span><span class="op">:</span> <span class="dt">Pair</span>&lt;<span class="va">String</span><span class="op">,</span> <span class="va">String</span>&gt;<span class="op">,</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">key</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="va">shouldDecrypt</span><span class="op">:</span> <span class="dt">Boolean</span><span class="op">,</span> </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="va">iv</span><span class="op">:</span> <span class="dt">ByteArray</span><span class="op">?</span> <span class="op">=</span> null</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="op">):</span> <span class="dt">ByteArray</span> <span class="op">=</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  performSymmetric<span class="op">(</span>files<span class="op">,</span> key<span class="op">,</span> <span class="st">&quot;DESede&quot;</span><span class="op">,</span> <span class="st">&quot;DESede/CBC/PKCS7Padding&quot;</span><span class="op">,</span> shouldDecrypt<span class="op">,</span> iv<span class="op">)</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">full3DES</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">key</span> <span class="op">=</span> <span class="st">&quot;aabbccddeeffgghh&quot;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">iv</span> <span class="op">=</span> castle<span class="op">.</span>perform3DES<span class="op">(</span>encodingFilePair<span class="op">(</span><span class="st">&quot;3des&quot;</span><span class="op">),</span> key<span class="op">,</span> <span class="kw">false</span><span class="op">)</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    castle<span class="op">.</span>perform3DES<span class="op">(</span>decodingFilePair<span class="op">(</span><span class="st">&quot;3des&quot;</span><span class="op">),</span> key<span class="op">,</span> <span class="kw">true</span><span class="op">,</span> iv<span class="op">)</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="szyfr-symetryczny---blowfish">Szyfr symetryczny - Blowfish</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">performBlowfish</span><span class="op">(</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">files</span><span class="op">:</span> <span class="dt">Pair</span>&lt;<span class="va">String</span><span class="op">,</span> <span class="va">String</span>&gt;<span class="op">,</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">key</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="va">shouldDecrypt</span><span class="op">:</span> <span class="dt">Boolean</span><span class="op">,</span> </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="va">iv</span><span class="op">:</span> <span class="dt">ByteArray</span><span class="op">?</span> <span class="op">=</span> null</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="op">):</span> <span class="dt">ByteArray</span> <span class="op">=</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  performSymmetric<span class="op">(</span>files<span class="op">,</span> key<span class="op">,</span> <span class="st">&quot;Blowfish&quot;</span><span class="op">,</span> <span class="st">&quot;Blowfish/CBC/PKCS5Padding&quot;</span><span class="op">,</span> shouldDecrypt<span class="op">,</span> iv<span class="op">)</span></span></code></pre></div>
+<h3 id="szyfr-asymetryczny---rsa">Szyfr asymetryczny - RSA</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">asymmetricEncrypt</span><span class="op">(</span><span class="va">plain</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="va">publicKey</span><span class="op">:</span> <span class="dt">PublicKey</span><span class="op">,</span> <span class="va">algo</span><span class="op">:</span> <span class="dt">Asymmetric</span><span class="op">):</span> <span class="dt">ByteArray</span> <span class="op">=</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    performAsymmetric<span class="op">(</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>      plain<span class="op">.</span>toByteArray<span class="op">(</span>charset<span class="op">),</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      OneKey<span class="op">.</span>Public<span class="op">(</span>publicKey<span class="op">),</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> <span class="op">(</span>algo <span class="op">==</span> Asymmetric<span class="op">.</span>RSA<span class="op">)</span> <span class="st">&quot;RSA/None/OAEPWithSHA1AndMGF1Padding&quot;</span> <span class="cf">else</span> <span class="st">&quot;ECIES&quot;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">)</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">asymmetricDecrypt</span><span class="op">(</span><span class="va">crypt</span><span class="op">:</span> <span class="dt">ByteArray</span><span class="op">,</span> <span class="va">privateKey</span><span class="op">:</span> <span class="dt">PrivateKey</span><span class="op">,</span> <span class="va">algo</span><span class="op">:</span> <span class="dt">Asymmetric</span><span class="op">):</span> <span class="dt">String</span> <span class="op">=</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    performAsymmetric<span class="op">(</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>      crypt<span class="op">,</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>      OneKey<span class="op">.</span>Private<span class="op">(</span>privateKey<span class="op">),</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> <span class="op">(</span>algo <span class="op">==</span> Asymmetric<span class="op">.</span>RSA<span class="op">)</span> <span class="st">&quot;RSA/None/OAEPWithSHA1AndMGF1Padding&quot;</span> <span class="cf">else</span> <span class="st">&quot;ECIES&quot;</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">).</span>toString<span class="op">(</span>charset<span class="op">)</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">performAsymmetric</span><span class="op">(</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">data</span><span class="op">:</span> <span class="dt">ByteArray</span><span class="op">,</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="va">key</span><span class="op">:</span> <span class="dt">OneKey</span><span class="op">,</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="va">transformation</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">):</span> <span class="dt">ByteArray</span> <span class="op">{</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">cipher</span> <span class="op">=</span> <span class="cf">when</span> <span class="op">(</span>key<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>      <span class="kw">is</span> OneKey<span class="op">.</span>Private <span class="op">-&gt;</span> getCipher<span class="op">(</span>key<span class="op">.</span>key<span class="op">,</span> transformation<span class="op">,</span> <span class="kw">true</span><span class="op">)</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>      <span class="kw">is</span> OneKey<span class="op">.</span>Public <span class="op">-&gt;</span> getCipher<span class="op">(</span>key<span class="op">.</span>key<span class="op">,</span> transformation<span class="op">,</span> <span class="kw">false</span><span class="op">)</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">return</span> cipher<span class="op">.</span>doFinal<span class="op">(</span><span class="kw">data</span><span class="op">)</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">fun</span> <span class="fu">fullAsym</span><span class="op">(</span><span class="va">algo</span><span class="op">:</span> <span class="dt">BouncyCastle</span>.<span class="va">Asymmetric</span><span class="op">,</span> <span class="va">name</span><span class="op">:</span> <span class="dt">String</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">keyPair</span> <span class="op">=</span> castle<span class="op">.</span>generateKeyPair<span class="op">(</span>algo<span class="op">)</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">a</span> <span class="op">=</span> <span class="st">&quot;香港人口稠密，擁有眾多島嶼，加上道路使用率之高&quot;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">b</span> <span class="op">=</span> castle<span class="op">.</span>asymmetricEncrypt<span class="op">(</span>a<span class="op">,</span> keyPair<span class="op">.</span><span class="kw">public</span><span class="op">,</span> algo<span class="op">)</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">c</span> <span class="op">=</span> castle<span class="op">.</span>asymmetricDecrypt<span class="op">(</span>b<span class="op">,</span> keyPair<span class="op">.</span><span class="kw">private</span><span class="op">,</span> algo<span class="op">)</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    println<span class="op">(</span><span class="st">&quot;</span><span class="ss">$name</span><span class="st">: </span><span class="ss">${</span>a<span class="op">.</span>withByteSize<span class="op">()</span><span class="ss">}</span><span class="st"> -&gt; </span><span class="ss">${</span>b<span class="op">.</span>makePrintable<span class="op">()</span><span class="ss">}</span><span class="st"> -&gt; </span><span class="ss">${</span>c<span class="op">.</span>withByteSize<span class="op">()</span><span class="ss">}</span><span class="st">&quot;</span><span class="op">)</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>fullAsym<span class="op">(</span>BouncyCastle<span class="op">.</span>Asymmetric<span class="op">.</span>RSA<span class="op">,</span> <span class="st">&quot;RSA&quot;</span><span class="op">)</span></span></code></pre></div>
+<h3 id="szyfr-asymetryczny---krzywe-eliptyczne">Szyfr asymetryczny -
+Krzywe Eliptyczne</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fullAsym<span class="op">(</span>BouncyCastle<span class="op">.</span>Asymmetric<span class="op">.</span>EC<span class="op">,</span> <span class="st">&quot;Elliptic Curves&quot;</span><span class="op">)</span></span></code></pre></div>
+<h3 id="hasz---md5">Hasz - MD5</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">performMD5</span><span class="op">(</span><span class="va">file</span><span class="op">:</span> <span class="dt">String</span><span class="op">):</span> <span class="dt">String</span> <span class="op">=</span> performHash<span class="op">(</span>file<span class="op">,</span> <span class="kw">false</span><span class="op">)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">fun</span> <span class="fu">performHash</span><span class="op">(</span><span class="va">file</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="va">useSHA512InsteadOfMD5</span><span class="op">:</span> <span class="dt">Boolean</span><span class="op">):</span> <span class="dt">String</span> <span class="op">{</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">data</span> <span class="op">=</span> readFrom<span class="op">(</span>file<span class="op">)</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">algo</span> <span class="op">=</span> <span class="cf">if</span> <span class="op">(</span>useSHA512InsteadOfMD5<span class="op">)</span> <span class="st">&quot;SHA-512&quot;</span> <span class="cf">else</span> <span class="st">&quot;MD5&quot;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">return</span> MessageDigest<span class="op">.</span>getInstance<span class="op">(</span>algo<span class="op">).</span>digest<span class="op">(</span><span class="kw">data</span><span class="op">).</span>joinToString<span class="op">(</span><span class="st">&quot;&quot;</span><span class="op">)</span> <span class="op">{</span> <span class="st">&quot;%02x&quot;</span><span class="op">.</span>format<span class="op">(</span>it<span class="op">)</span> <span class="op">}</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="hasz---sha-512">Hasz - SHA-512</h3>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">performSHA512</span><span class="op">(</span><span class="va">file</span><span class="op">:</span> <span class="dt">String</span><span class="op">):</span> <span class="dt">String</span> <span class="op">=</span> performHash<span class="op">(</span>file<span class="op">,</span> <span class="kw">true</span><span class="op">)</span></span></code></pre></div>
+<h3 id="podpis---krzywe-eliptyczne">Podpis - Krzywe Eliptyczne</h3>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">performSignature</span><span class="op">(</span><span class="va">file</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="va">key</span><span class="op">:</span> <span class="dt">PrivateKey</span><span class="op">):</span> <span class="dt">ByteArray</span> <span class="op">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">data</span> <span class="op">=</span> readFrom<span class="op">(</span>file<span class="op">)</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">signature</span><span class="op">:</span> Signature <span class="op">=</span> Signature<span class="op">.</span>getInstance<span class="op">(</span><span class="st">&quot;SHA512withECDSA&quot;</span><span class="op">)</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    signature<span class="op">.</span>initSign<span class="op">(</span>key<span class="op">)</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    signature<span class="op">.</span>update<span class="op">(</span><span class="kw">data</span><span class="op">)</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">return</span> signature<span class="op">.</span>sign<span class="op">()</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">verifySignature</span><span class="op">(</span><span class="va">file</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="va">signature</span><span class="op">:</span> <span class="dt">ByteArray</span><span class="op">,</span> <span class="va">key</span><span class="op">:</span> <span class="dt">PublicKey</span><span class="op">):</span> <span class="dt">Boolean</span> <span class="op">{</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">data</span> <span class="op">=</span> readFrom<span class="op">(</span>file<span class="op">)</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">signInstance</span><span class="op">:</span> Signature <span class="op">=</span> Signature<span class="op">.</span>getInstance<span class="op">(</span><span class="st">&quot;SHA512withECDSA&quot;</span><span class="op">)</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    signInstance<span class="op">.</span>initVerify<span class="op">(</span>key<span class="op">)</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    signInstance<span class="op">.</span>update<span class="op">(</span><span class="kw">data</span><span class="op">)</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">return</span> signInstance<span class="op">.</span>verify<span class="op">(</span>signature<span class="op">)</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">fun</span> <span class="fu">fullSign</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">keyPair</span> <span class="op">=</span> castle<span class="op">.</span>generateKeyPair<span class="op">(</span>BouncyCastle<span class="op">.</span>Asymmetric<span class="op">.</span>EC<span class="op">)</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">signature</span> <span class="op">=</span> castle<span class="op">.</span>performSignature<span class="op">(</span>plainPath<span class="op">,</span> keyPair<span class="op">.</span><span class="kw">private</span><span class="op">)</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">isVerified</span> <span class="op">=</span> castle<span class="op">.</span>verifySignature<span class="op">(</span>plainPath<span class="op">,</span> signature<span class="op">,</span> keyPair<span class="op">.</span><span class="kw">public</span><span class="op">)</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">correctString</span> <span class="op">=</span> <span class="cf">if</span> <span class="op">(</span>isVerified<span class="op">)</span> <span class="st">&quot;correct&quot;</span> <span class="cf">else</span> <span class="st">&quot;incorrect&quot;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    println<span class="op">(</span><span class="st">&quot;Raccoon signature: </span><span class="ss">${</span>signature<span class="op">.</span>makePrintable<span class="op">()</span><span class="ss">}</span><span class="st"> (signature </span><span class="ss">$correctString</span><span class="st">)&quot;</span><span class="op">)</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="cryptlib">CryptLib</h2>
+<h3 id="szyfr-symetryczny---aes">Szyfr symetryczny - AES</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> performAES<span class="op">(</span>string inputFile<span class="op">,</span> string outputFile<span class="op">,</span> byte<span class="op">*</span> key<span class="op">,</span> <span class="dt">bool</span> shouldDecrypt<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    reset<span class="op">();</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    CRYPT_CONTEXT context<span class="op">;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    ret <span class="op">=</span> cryptCreateContext<span class="op">(&amp;</span>context<span class="op">,</span> CRYPT_UNUSED<span class="op">,</span> CRYPT_ALGO_AES<span class="op">);</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    handle<span class="op">(</span><span class="st">&quot;AES context creation&quot;</span><span class="op">);</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    ret <span class="op">=</span> cryptSetAttributeString<span class="op">(</span>context<span class="op">,</span> CRYPT_CTXINFO_KEY<span class="op">,</span> key<span class="op">,</span> AES_KEY_SIZE<span class="op">);</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    handle<span class="op">(</span><span class="st">&quot;AES key setting&quot;</span><span class="op">);</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">size_t</span> bread <span class="op">=</span> readFromfile<span class="op">(</span>inputFile<span class="op">,</span> bufferA<span class="op">);</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>shouldDecrypt<span class="op">)</span> <span class="op">{</span>  <span class="co">// Encryption</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>        bread <span class="op">=</span> fillBufferTillDivisible<span class="op">(</span>bufferA<span class="op">,</span> AES_BLOCK_SIZE<span class="op">);</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>        ret <span class="op">=</span> cryptEncrypt<span class="op">(</span>context<span class="op">,</span> bufferA<span class="op">,</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span> bread<span class="op">);</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>        handle<span class="op">(</span><span class="st">&quot;AES encryption&quot;</span><span class="op">);</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>        ret <span class="op">=</span> cryptGetAttributeString<span class="op">(</span>context<span class="op">,</span> CRYPT_CTXINFO_IV<span class="op">,</span> iv<span class="op">,</span> <span class="op">&amp;</span>ivSize<span class="op">);</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>        handle<span class="op">(</span><span class="st">&quot;AES IV extraction&quot;</span><span class="op">);</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span>  <span class="co">// Decryption</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>        ret <span class="op">=</span> cryptSetAttributeString<span class="op">(</span>context<span class="op">,</span> CRYPT_CTXINFO_IV<span class="op">,</span> iv<span class="op">,</span> ivSize<span class="op">);</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>        handle<span class="op">(</span><span class="st">&quot;AES IV setting&quot;</span><span class="op">);</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>        ret <span class="op">=</span> cryptDecrypt<span class="op">(</span>context<span class="op">,</span> bufferA<span class="op">,</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span> bread<span class="op">);</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>        handle<span class="op">(</span><span class="st">&quot;AES decryption&quot;</span><span class="op">);</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    ret <span class="op">=</span> writeToFile<span class="op">(</span>outputFile<span class="op">,</span> bufferA<span class="op">);</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>    handle<span class="op">(</span><span class="st">&quot;AES file write&quot;</span><span class="op">);</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>    cryptDestroyContext<span class="op">(</span>context<span class="op">);</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="szyfr-symetryczny---3des-1">Szyfr symetryczny - 3DES</h3>
+<div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> perform3DES<span class="op">(</span>string inputFile<span class="op">,</span> string outputFile<span class="op">,</span> byte<span class="op">*</span> key<span class="op">,</span> <span class="dt">bool</span> shouldDecrypt<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    reset<span class="op">();</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    CRYPT_CONTEXT context<span class="op">;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    ret <span class="op">=</span> cryptCreateContext<span class="op">(&amp;</span>context<span class="op">,</span> CRYPT_UNUSED<span class="op">,</span> CRYPT_ALGO_3DES<span class="op">);</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    handle<span class="op">(</span><span class="st">&quot;3DES context creation&quot;</span><span class="op">);</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    ret <span class="op">=</span> cryptSetAttributeString<span class="op">(</span>context<span class="op">,</span> CRYPT_CTXINFO_KEY<span class="op">,</span> key<span class="op">,</span> DES3_KEY_SIZE<span class="op">);</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    handle<span class="op">(</span><span class="st">&quot;3DES key setting&quot;</span><span class="op">);</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">size_t</span> bread <span class="op">=</span> readFromfile<span class="op">(</span>inputFile<span class="op">,</span> bufferA<span class="op">);</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>shouldDecrypt<span class="op">)</span> <span class="op">{</span>  <span class="co">// Encryption</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>        bread <span class="op">=</span> fillBufferTillDivisible<span class="op">(</span>bufferA<span class="op">,</span> DES3_BLOCK_SIZE<span class="op">);</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        ret <span class="op">=</span> cryptEncrypt<span class="op">(</span>context<span class="op">,</span> bufferA<span class="op">,</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span> bread<span class="op">);</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>        handle<span class="op">(</span><span class="st">&quot;3DES encryption&quot;</span><span class="op">);</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>        ret <span class="op">=</span> cryptGetAttributeString<span class="op">(</span>context<span class="op">,</span> CRYPT_CTXINFO_IV<span class="op">,</span> iv<span class="op">,</span> <span class="op">&amp;</span>ivSize<span class="op">);</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>        handle<span class="op">(</span><span class="st">&quot;3DES IV extraction&quot;</span><span class="op">);</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span>  <span class="co">// Decryption</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>        ret <span class="op">=</span> cryptSetAttributeString<span class="op">(</span>context<span class="op">,</span> CRYPT_CTXINFO_IV<span class="op">,</span> iv<span class="op">,</span> ivSize<span class="op">);</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>        handle<span class="op">(</span><span class="st">&quot;3DES IV setting&quot;</span><span class="op">);</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>        ret <span class="op">=</span> cryptDecrypt<span class="op">(</span>context<span class="op">,</span> bufferA<span class="op">,</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span> bread<span class="op">);</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>        handle<span class="op">(</span><span class="st">&quot;3DES decryption&quot;</span><span class="op">);</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    ret <span class="op">=</span> writeToFile<span class="op">(</span>outputFile<span class="op">,</span> bufferA<span class="op">);</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    handle<span class="op">(</span><span class="st">&quot;3DES file write&quot;</span><span class="op">);</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    cryptDestroyContext<span class="op">(</span>context<span class="op">);</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="szyfr-asymetryczny---rsa-1">Szyfr asymetryczny - RSA</h3>
+<div class="sourceCode" id="cb13"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> generateRSAKeys<span class="op">(</span>CRYPT_CONTEXT<span class="op">*</span> ctxPtr<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    ret <span class="op">=</span> cryptCreateContext<span class="op">(</span>ctxPtr<span class="op">,</span> CRYPT_UNUSED<span class="op">,</span> CRYPT_ALGO_RSA<span class="op">);</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    handle<span class="op">(</span><span class="st">&quot;RSA context creation&quot;</span><span class="op">);</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    cryptSetAttributeString<span class="op">(*</span>ctxPtr<span class="op">,</span> CRYPT_CTXINFO_LABEL<span class="op">,</span> <span class="st">&quot;Key Pair&quot;</span><span class="op">,</span> <span class="dv">5</span> <span class="op">);</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    ret <span class="op">=</span> cryptGenerateKey<span class="op">(*</span>ctxPtr<span class="op">);</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    handle<span class="op">(</span><span class="st">&quot;RSA key generation&quot;</span><span class="op">);</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> performElGamalOrRSA<span class="op">(</span>CRYPT_CONTEXT context<span class="op">,</span> string inputFile<span class="op">,</span> string outputFile<span class="op">,</span> <span class="dt">bool</span> shouldDecrypt<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    reset<span class="op">();</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    readFromfile<span class="op">(</span>inputFile<span class="op">,</span> bufferA<span class="op">);</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">size_t</span> bread <span class="op">=</span> trimOrPad<span class="op">(</span>bufferA<span class="op">,</span> getKeyLen<span class="op">(</span>context<span class="op">));</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>shouldDecrypt<span class="op">)</span> <span class="op">{</span>  <span class="co">// Encrypt</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>        ret <span class="op">=</span> cryptEncrypt<span class="op">(</span>context<span class="op">,</span> bufferA<span class="op">,</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span> bread<span class="op">);</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        handle<span class="op">(</span><span class="st">&quot;RSA/ElGamal encryption&quot;</span><span class="op">);</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span>  <span class="co">// Decrypt</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>        ret <span class="op">=</span> cryptDecrypt<span class="op">(</span>context<span class="op">,</span> bufferA<span class="op">,</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span> bread<span class="op">);</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>        handle<span class="op">(</span><span class="st">&quot;RSA/ElGamal decryption&quot;</span><span class="op">);</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    ret <span class="op">=</span> writeToFile<span class="op">(</span>outputFile<span class="op">,</span> bufferA<span class="op">);</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    handle<span class="op">(</span><span class="st">&quot;RSA/ElGamal file write&quot;</span><span class="op">);</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="szyfr-asymetryczny---elgamal">Szyfr asymetryczny - ElGamal</h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> generateElGamalKeys<span class="op">(</span>CRYPT_CONTEXT<span class="op">*</span> ctxPtr<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    ret <span class="op">=</span> cryptCreateContext<span class="op">(</span>ctxPtr<span class="op">,</span> CRYPT_UNUSED<span class="op">,</span> CRYPT_ALGO_ELGAMAL<span class="op">);</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    handle<span class="op">(</span><span class="st">&quot;ElGamal context creation&quot;</span><span class="op">);</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    cryptSetAttributeString<span class="op">(*</span>ctxPtr<span class="op">,</span> CRYPT_CTXINFO_LABEL<span class="op">,</span> <span class="st">&quot;Key Pair&quot;</span><span class="op">,</span> <span class="dv">5</span> <span class="op">);</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    ret <span class="op">=</span> cryptGenerateKey<span class="op">(*</span>ctxPtr<span class="op">);</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    handle<span class="op">(</span><span class="st">&quot;ElGamal key generation&quot;</span><span class="op">);</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="hasz---md5-1">Hasz - MD5</h3>
+<div class="sourceCode" id="cb16"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>CRYPT_CONTEXT performDigest<span class="op">(</span>string inputFile<span class="op">,</span> CRYPT_ALGO_TYPE hashAlgo<span class="op">,</span> <span class="dt">int</span> blockSize<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    reset<span class="op">();</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    CRYPT_CONTEXT context<span class="op">;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    ret <span class="op">=</span> cryptCreateContext<span class="op">(&amp;</span>context<span class="op">,</span> CRYPT_UNUSED<span class="op">,</span> hashAlgo<span class="op">);</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    handle<span class="op">(</span><span class="st">&quot;Digest context creation&quot;</span><span class="op">);</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    readFromfile<span class="op">(</span>inputFile<span class="op">,</span> bufferA<span class="op">);</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">size_t</span> bread <span class="op">=</span> fillBufferTillDivisible<span class="op">(</span>bufferA<span class="op">,</span> blockSize<span class="op">);</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> bread<span class="op">;</span> i <span class="op">+=</span> blockSize<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>        cryptEncrypt<span class="op">(</span>context<span class="op">,</span> <span class="op">&amp;(</span>bufferA<span class="op">[</span>i<span class="op">]),</span> blockSize<span class="op">);</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    cryptEncrypt<span class="op">(</span>context<span class="op">,</span> bufferA<span class="op">,</span> <span class="dv">0</span><span class="op">);</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> context<span class="op">;</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> performDigestAndPrint<span class="op">(</span>string inputFile<span class="op">,</span> CRYPT_ALGO_TYPE hashAlgo<span class="op">,</span> <span class="dt">int</span> blockSize<span class="op">,</span> string name<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    byte digest<span class="op">[</span>CRYPT_MAX_HASHSIZE<span class="op">],</span> hex<span class="op">[</span>CRYPT_MAX_HASHSIZE <span class="op">*</span> <span class="dv">2</span><span class="op">];</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> CRYPT_MAX_HASHSIZE <span class="op">*</span> <span class="dv">2</span><span class="op">;</span> i<span class="op">++)</span> hex<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    CRYPT_CONTEXT context <span class="op">=</span> performDigest<span class="op">(</span>inputFile<span class="op">,</span> hashAlgo<span class="op">,</span> blockSize<span class="op">);</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> hashLen<span class="op">;</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    ret <span class="op">=</span> cryptGetAttributeString<span class="op">(</span>context<span class="op">,</span> CRYPT_CTXINFO_HASHVALUE<span class="op">,</span> digest<span class="op">,</span> <span class="op">&amp;</span>hashLen<span class="op">);</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    handle<span class="op">(</span><span class="st">&quot;Digest extraction&quot;</span><span class="op">);</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    copyStringAsHex<span class="op">(</span>digest<span class="op">,</span> hex<span class="op">,</span> hashLen<span class="op">);</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s</span><span class="st"> digest: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> name<span class="op">,</span> hex<span class="op">);</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>performDigestAndPrint<span class="op">(</span><span class="st">&quot;resources/raccoon.jpg&quot;</span><span class="op">,</span> CRYPT_ALGO_MD5<span class="op">,</span> MD5_BLOCK_SIZE<span class="op">,</span> <span class="st">&quot;MD5&quot;</span><span class="op">);</span></span></code></pre></div>
+<h3 id="hasz---sha-1">Hasz - SHA-1</h3>
+<div class="sourceCode" id="cb19"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>performDigestAndPrint<span class="op">(</span><span class="st">&quot;resources/raccoon.jpg&quot;</span><span class="op">,</span> CRYPT_ALGO_SHA1<span class="op">,</span> SHA1_BLOCK_SIZE<span class="op">,</span> <span class="st">&quot;SHA-1&quot;</span><span class="op">);</span></span></code></pre></div>
+<h3 id="hasz---sha-256">Hasz - SHA-256</h3>
+<div class="sourceCode" id="cb20"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>performDigestAndPrint<span class="op">(</span><span class="st">&quot;resources/raccoon.jpg&quot;</span><span class="op">,</span> CRYPT_ALGO_SHA2<span class="op">,</span> SHA256_BLOCK_SIZE<span class="op">,</span> <span class="st">&quot;SHA-256&quot;</span><span class="op">);</span></span></code></pre></div>
+<h3 id="podpis---rsa">Podpis - RSA</h3>
+<div class="sourceCode" id="cb21"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> fullSignature<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    CRYPT_CONTEXT signContext<span class="op">;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    byte signature<span class="op">[</span>ARBITRARY_MAX_SIGNATURE_LEN<span class="op">];</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    generateRSAKeys<span class="op">(&amp;</span>signContext<span class="op">);</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> signLen <span class="op">=</span> performSign<span class="op">(</span>signContext<span class="op">,</span> <span class="st">&quot;resources/raccoon.jpg&quot;</span><span class="op">,</span> signature<span class="op">);</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">bool</span> check <span class="op">=</span> verifySignature<span class="op">(</span>signContext<span class="op">,</span> <span class="st">&quot;resources/raccoon.jpg&quot;</span><span class="op">,</span> signature<span class="op">,</span> signLen<span class="op">);</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;File signature </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> check <span class="op">?</span> <span class="st">&quot;correct&quot;</span> <span class="op">:</span> <span class="st">&quot;incorrect&quot;</span><span class="op">);</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    cryptDestroyContext<span class="op">(</span>signContext<span class="op">);</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="wnioski">Wnioski</h2>
+<p>Obie biblioteki były dosyć łatwe w użytku, choć w obu przypadkach
+dokumentacja była stara i niedopracowana. Na szczęście przeprowadzenie
+algorytmu w większości przypadków ograniczało się do przekazania
+odpowiedniej stałej jako argumentu funkcji (oraz, oczywiście,
+przygotowania danych i obrobienia wyniku).</p>
+</body>
+</html>

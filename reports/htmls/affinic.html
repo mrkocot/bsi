@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Szyfr afiniczny</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="markdown.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Szyfr afiniczny</h1>
+</header>
+<p><em>Marcin Kocot</em></p>
+<p>Zadanie wykonano w języku Kotlin, przy użyciu build-toola Bazel.</p>
+<hr />
+<h2 id="funkcje-pomocnicze">Funkcje pomocnicze</h2>
+<h3 id="największy-wspólny-dzielnik">Największy wspólny dzielnik</h3>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">tailrec</span> <span class="kw">fun</span> <span class="fu">gcd</span><span class="op">(</span><span class="va">a</span><span class="op">:</span> <span class="dt">Int</span><span class="op">,</span> <span class="va">b</span><span class="op">:</span> <span class="dt">Int</span><span class="op">):</span> <span class="dt">Int</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>b <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">return</span> a</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">return</span> gcd<span class="op">(</span>b<span class="op">,</span> a <span class="op">%</span> b<span class="op">)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="odwrotność-modulo">Odwrotność modulo</h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">infix</span> <span class="kw">fun</span> <span class="fu">Int</span><span class="op">.</span><span class="fu">invMod</span><span class="op">(</span><span class="va">mod</span><span class="op">:</span> <span class="dt">Int</span><span class="op">):</span> <span class="dt">Int</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> <span class="va">a</span> <span class="op">=</span> <span class="kw">this</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> <span class="va">m0</span> <span class="op">=</span> mod</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> <span class="va">y</span> <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> <span class="va">x</span> <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>mod <span class="op">==</span> <span class="dv">1</span><span class="op">)</span> <span class="kw">return</span> <span class="dv">0</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> <span class="op">(</span>a <span class="op">&gt;</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">q</span> <span class="op">=</span> a <span class="op">/</span> m0</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> <span class="va">t</span> <span class="op">=</span> m0</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    m0 <span class="op">=</span> a <span class="op">%</span> m0</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    a <span class="op">=</span> t</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> y</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> x <span class="op">-</span> q <span class="op">*</span> y</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> t</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>x <span class="op">&lt;</span> <span class="dv">0</span><span class="op">)</span> x <span class="op">+=</span> mod</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="kw">return</span> x</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3
+id="wyznaczanie-najczęściej-występujących-w-zbiorze-liter">Wyznaczanie
+najczęściej występujących w zbiorze liter</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">fun</span> <span class="fu">Map</span><span class="op">&lt;</span><span class="dt">Char</span>, <span class="dt">Int</span><span class="op">&gt;.</span><span class="fu">getTopN</span><span class="op">(</span><span class="va">n</span><span class="op">:</span> <span class="dt">Int</span><span class="op">):</span> <span class="dt">List</span><span class="op">&lt;</span><span class="dt">Char</span><span class="op">&gt;</span> <span class="op">=</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span>entries</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>sortedByDescending <span class="op">{</span> it<span class="op">.</span>value <span class="op">}</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>take<span class="op">(</span>n<span class="op">)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>map <span class="op">{</span> it<span class="op">.</span>key <span class="op">}</span></span></code></pre></div>
+<h3 id="wyznaczanie-wszystkich-możliwych-par-liter">Wyznaczanie
+wszystkich możliwych par liter</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">fun</span> <span class="fu">List</span><span class="op">&lt;</span><span class="dt">Char</span><span class="op">&gt;.</span><span class="fu">getAllPairs</span><span class="op">():</span> <span class="dt">List</span><span class="op">&lt;</span><span class="dt">Pair</span><span class="op">&lt;</span><span class="dt">Char</span>, <span class="dt">Char</span><span class="op">&gt;&gt;</span> <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> <span class="va">res</span> <span class="op">=</span> mutableListOf<span class="op">&lt;</span>Pair<span class="op">&lt;</span><span class="kw">Char</span><span class="op">,</span> <span class="kw">Char</span><span class="op">&gt;&gt;()</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span>a <span class="kw">in</span> <span class="kw">this</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span>b <span class="kw">in</span> <span class="kw">this</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> <span class="op">(</span>a <span class="op">!=</span> b<span class="op">)</span> res<span class="op">.</span>add<span class="op">(</span>a to b<span class="op">)</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">return</span> res</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="inne">Inne</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Wykonanie operacji na każdej literze napisu</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">fun</span> <span class="fu">String</span><span class="op">.</span><span class="fu">mapLetters</span><span class="op">(</span><span class="va">operation</span><span class="op">:</span> <span class="op">(</span><span class="dt">Char</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="dt">Char</span><span class="op">):</span> <span class="dt">String</span> <span class="op">=</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span>uppercase<span class="op">().</span>map<span class="op">{</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>it<span class="op">.</span>isLetter<span class="op">())</span> operation<span class="op">(</span>it<span class="op">)</span> <span class="cf">else</span> it</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">}.</span>joinToString<span class="op">(</span>separator <span class="op">=</span> <span class="st">&quot;&quot;</span><span class="op">)</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Zwraca kod ASCII litery</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">fun</span> <span class="fu">Char</span><span class="op">.</span><span class="fu">ord</span><span class="op">():</span> <span class="dt">Int</span> <span class="op">=</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span>code <span class="op">-</span> <span class="ch">&#39;A&#39;</span><span class="op">.</span>code</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">// Zwraca literę z danym kodem ASCII</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">fun</span> <span class="fu">Int</span><span class="op">.</span><span class="fu">chr</span><span class="op">():</span> <span class="dt">Char</span> <span class="op">=</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">Char</span><span class="op">(</span><span class="kw">this</span> <span class="op">+</span> <span class="ch">&#39;A&#39;</span><span class="op">.</span>code<span class="op">)</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">// Wylicza funkcję ax+b modulo 26</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">fun</span> <span class="fu">Int</span><span class="op">.</span><span class="fu">ab</span><span class="op">(</span><span class="va">a</span><span class="op">:</span> <span class="dt">Int</span><span class="op">,</span> <span class="va">b</span><span class="op">:</span> <span class="dt">Int</span><span class="op">):</span> <span class="dt">Int</span> <span class="op">=</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span>a <span class="op">*</span> <span class="kw">this</span> <span class="op">+</span> b<span class="op">)</span> posMod  <span class="dv">26</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">// Wylicza odwrotność funkcji ax+b modulo 26</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">fun</span> <span class="fu">Int</span><span class="op">.</span><span class="fu">revAb</span><span class="op">(</span><span class="va">a</span><span class="op">:</span> <span class="dt">Int</span><span class="op">,</span> <span class="va">b</span><span class="op">:</span> <span class="dt">Int</span><span class="op">):</span> <span class="dt">Int</span> <span class="op">=</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="op">((</span><span class="kw">this</span> <span class="op">-</span> b<span class="op">)</span> <span class="op">*</span> <span class="op">(</span>a invMod <span class="dv">26</span><span class="op">))</span> posMod <span class="dv">26</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">// Wylicza nieujemną resztę z dzielenia</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">infix</span> <span class="kw">fun</span> <span class="fu">Int</span><span class="op">.</span><span class="fu">posMod</span><span class="op">(</span><span class="va">div</span><span class="op">:</span> <span class="dt">Int</span><span class="op">):</span> <span class="dt">Int</span> <span class="op">=</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span><span class="kw">this</span> <span class="op">%</span> div<span class="op">).</span>let <span class="op">{</span> <span class="cf">if</span> <span class="op">(</span>it <span class="op">&gt;=</span> <span class="dv">0</span><span class="op">)</span> it <span class="cf">else</span> it <span class="op">+</span> div <span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="szyfrowanie">Szyfrowanie</h2>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">fun</span> <span class="fu">String</span><span class="op">.</span><span class="fu">encrypt</span><span class="op">(</span><span class="va">a</span><span class="op">:</span> <span class="dt">Int</span><span class="op">,</span> <span class="va">b</span><span class="op">:</span> <span class="dt">Int</span><span class="op">):</span> <span class="dt">String</span> <span class="op">=</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span>mapLetters <span class="op">{</span> it<span class="op">.</span>ord<span class="op">().</span>ab<span class="op">(</span>a<span class="op">,</span> b<span class="op">).</span>chr<span class="op">()</span> <span class="op">}</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">fun</span> <span class="fu">String</span><span class="op">.</span><span class="fu">decrypt</span><span class="op">(</span><span class="va">a</span><span class="op">:</span> <span class="dt">Int</span><span class="op">,</span> <span class="va">b</span><span class="op">:</span> <span class="dt">Int</span><span class="op">):</span> <span class="dt">String</span> <span class="op">=</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span>mapLetters <span class="op">{</span> it<span class="op">.</span>ord<span class="op">().</span>revAb<span class="op">(</span>a<span class="op">,</span> b<span class="op">).</span>chr<span class="op">()</span> <span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="testowanie">Testowanie</h2>
+<h3 id="weryfikacja-poprawności-klucza">Weryfikacja poprawności
+klucza</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">fun</span> <span class="fu">verifyAB</span><span class="op">(</span><span class="va">a</span><span class="op">:</span> <span class="dt">Int</span><span class="op">,</span> <span class="va">b</span><span class="op">:</span> <span class="dt">Int</span><span class="op">):</span> <span class="dt">Boolean</span> <span class="op">=</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  a <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> b <span class="op">&gt;=</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> a <span class="op">&lt;</span> <span class="dv">26</span> <span class="op">&amp;&amp;</span> gcd<span class="op">(</span>a<span class="op">,</span> <span class="dv">26</span><span class="op">)</span> <span class="op">==</span> <span class="dv">1</span> <span class="op">&amp;&amp;</span> b <span class="op">&lt;</span> <span class="dv">26</span></span></code></pre></div>
+<h3 id="wyznaczanie-klucza-na-podstawie-par-liter">Wyznaczanie klucza na
+podstawie par liter</h3>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">fun</span> <span class="fu">solveWithPairs</span><span class="op">(</span><span class="va">p1</span><span class="op">:</span> <span class="dt">Pair</span>&lt;<span class="va">Char</span><span class="op">,</span> <span class="va">Char</span>&gt;<span class="op">,</span> <span class="va">p2</span><span class="op">:</span> <span class="dt">Pair</span>&lt;<span class="va">Char</span><span class="op">,</span> <span class="va">Char</span>&gt;<span class="op">):</span> <span class="dt">Pair</span><span class="op">&lt;</span><span class="dt">Int</span>, <span class="dt">Int</span><span class="op">&gt;</span>? <span class="op">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> <span class="va">a1</span> <span class="op">=</span> p1<span class="op">.</span>first<span class="op">.</span>ord<span class="op">()</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> <span class="va">a2</span> <span class="op">=</span> p2<span class="op">.</span>first<span class="op">.</span>ord<span class="op">()</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> <span class="va">b1</span> <span class="op">=</span> p1<span class="op">.</span>second<span class="op">.</span>ord<span class="op">()</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> <span class="va">b2</span> <span class="op">=</span> p2<span class="op">.</span>second<span class="op">.</span>ord<span class="op">()</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> <span class="va">diffA</span> <span class="op">=</span> a1 <span class="op">-</span> a2</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> <span class="va">diffB</span> <span class="op">=</span> b1 <span class="op">-</span> b2</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>diffA <span class="op">&lt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    diffA <span class="op">=</span> <span class="op">-</span>diffA</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    diffB <span class="op">=</span> <span class="op">-</span>diffB</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">((</span>diffA <span class="op">%</span> <span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">!=</span> <span class="op">(</span>diffB <span class="op">%</span> <span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span><span class="op">))</span> <span class="kw">return</span> <span class="kw">null</span> <span class="co">// if they have different parities, adding 26 will not help</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> <span class="op">(</span>diffB <span class="op">%</span> diffA <span class="op">!=</span> <span class="dv">0</span><span class="op">)</span> diffB <span class="op">+=</span> <span class="dv">26</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> <span class="va">solutionA</span> <span class="op">=</span> diffB <span class="op">/</span> diffA</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> <span class="va">solutionB</span> <span class="op">=</span> <span class="op">(</span>b1 <span class="op">-</span> a1 <span class="op">*</span> solutionA<span class="op">)</span> posMod <span class="dv">26</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="kw">return</span> solutionA to solutionB</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3
+id="próby-wyznaczania-kluczy-na-podstawie-n-najczęściej-występujących-liter">Próby
+wyznaczania kluczy na podstawie N najczęściej występujących liter</h3>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">fun</span> <span class="fu">testNxN</span><span class="op">(</span><span class="va">cypher</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="va">n</span><span class="op">:</span> <span class="dt">Int</span><span class="op">):</span> <span class="dt">List</span><span class="op">&lt;</span><span class="dt">String</span><span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> <span class="va">results</span> <span class="op">=</span> mutableListOf<span class="op">&lt;</span><span class="kw">String</span><span class="op">&gt;()</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> <span class="va">upc</span> <span class="op">=</span> cypher<span class="op">.</span>uppercase<span class="op">()</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> <span class="va">counts</span> <span class="op">=</span> PROBS<span class="op">.</span>keys<span class="op">.</span>associateWith <span class="op">{</span> letter <span class="op">-&gt;</span> upc<span class="op">.</span>count <span class="op">{</span> it <span class="op">==</span> letter <span class="op">}</span> <span class="op">}</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">((</span>a1<span class="op">,</span> a2<span class="op">)</span> <span class="kw">in</span> PROBS<span class="op">.</span>getTopN<span class="op">(</span>n<span class="op">).</span>getAllPairs<span class="op">())</span> <span class="op">{</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">((</span>b1<span class="op">,</span> b2<span class="op">)</span> <span class="kw">in</span> counts<span class="op">.</span>getTopN<span class="op">(</span>n<span class="op">).</span>getAllPairs<span class="op">())</span> <span class="op">{</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>      <span class="kw">val</span> <span class="va">sol</span> <span class="op">=</span> solveWithPairs<span class="op">(</span>a1 to b1<span class="op">,</span> a2 to b2<span class="op">)</span> <span class="op">?:</span> <span class="cf">continue</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>      <span class="kw">val</span> <span class="va">body</span> <span class="op">=</span> <span class="cf">if</span> <span class="op">(</span>verifyAB<span class="op">(</span>sol<span class="op">.</span>first<span class="op">,</span> sol<span class="op">.</span>second<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        cypher<span class="op">.</span>decrypt<span class="op">(</span>sol<span class="op">.</span>first<span class="op">,</span> sol<span class="op">.</span>second<span class="op">).</span>also <span class="op">{</span> results<span class="op">.</span>add<span class="op">(</span>it<span class="op">)</span> <span class="op">}</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span> <span class="cf">else</span> <span class="st">&quot;&lt;Incorrect key&gt;&quot;</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">return</span> results</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="pełne-testowanie">Pełne testowanie</h3>
+<p>To jest najważniejsza metoda całego programu - wyznacza klucze za
+pomocą dwóch najczęściej występujących liter w zaszyfrowanej wiadomości
+i ogólnie w języku angielskim. Jeśli się nie powiedzie, ponawiamy dla
+trzech najczęstszych liter, potem czterech itd.</p>
+<p><strong><em>Dla bardzo długich testów, pierwsze wykonanie
+wystarczało. Im krótszy tekst, tym więcej prób trzeba było
+podjąć.</em></strong></p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">fun</span> <span class="fu">testUntilSuccessful</span><span class="op">(</span><span class="va">cypher</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="va">goalPlain</span><span class="op">:</span> <span class="dt">String</span><span class="op">,</span> <span class="va">maxN</span><span class="op">:</span> <span class="dt">Int</span><span class="op">):</span> <span class="dt">Int</span> <span class="op">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> <span class="va">goalUpper</span> <span class="op">=</span> goalPlain<span class="op">.</span>uppercase<span class="op">()</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  repeat<span class="op">(</span>maxN <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">n</span> <span class="op">=</span> it <span class="op">+</span> <span class="dv">2</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">results</span> <span class="op">=</span> testNxN<span class="op">(</span>cypher<span class="op">,</span> n<span class="op">)</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>results<span class="op">.</span>contains<span class="op">(</span>goalUpper<span class="op">))</span> <span class="kw">return</span> n</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">return</span> <span class="dv">999</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</body>
+</html>

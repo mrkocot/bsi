@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Szyfr Vernama</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="markdown.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Szyfr Vernama</h1>
+</header>
+<p><em>Marcin Kocot</em></p>
+<p>Zadanie wykonano w języku Kotlin, przy użyciu build-toola Bazel.</p>
+<hr />
+<h2 id="generator-liczb-losowych">Generator liczb losowych</h2>
+<p>Użyto własnej implementacji Blum-Blum-Shuba</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">next</span><span class="op">():</span> <span class="dt">Int</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> <span class="va">ret</span> <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    repeat<span class="op">(</span><span class="kw">Int</span><span class="op">.</span>SIZE_BITS<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        ret <span class="op">=</span> ret shl <span class="dv">1</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>nextBoolean<span class="op">())</span> ret <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">return</span> ret</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">nextBoolean</span><span class="op">():</span> <span class="dt">Boolean</span> <span class="op">=</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">((</span>lastX <span class="op">*</span> lastX<span class="op">)</span> <span class="op">%</span> n<span class="op">).</span>let <span class="op">{</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="kw">this</span><span class="op">.</span>lastX <span class="op">=</span> it</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        it <span class="op">%</span> BigInteger<span class="op">.</span>TWO <span class="op">==</span> BigInteger<span class="op">.</span>ZERO</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code></pre></div>
+<p>Wartości <em>p</em> i <em>q</em> wybierane są tak, żeby ich reszta z
+dzielenia przez 4 wynosiła 3</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">getMod4Eq3ProbablePrime</span><span class="op">(</span><span class="va">bitLen</span><span class="op">:</span> <span class="dt">Int</span><span class="op">,</span> <span class="va">rGen</span><span class="op">:</span> <span class="dt">Random</span><span class="op">):</span> <span class="dt">BigInteger</span> <span class="op">=</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    generateBigIntegersUntil<span class="op">(</span>bitLen<span class="op">,</span> rGen<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        it <span class="op">%</span> BigInteger<span class="op">(</span><span class="st">&quot;4&quot;</span><span class="op">)</span> <span class="op">==</span> BigInteger<span class="op">(</span><span class="st">&quot;3&quot;</span><span class="op">)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="generacja-klucza">Generacja klucza</h2>
+<p>Klucz składa się z kolejnych bajtów wygenerowanych opisanym powyżej
+Blum-Blum-Shubem</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">object</span> KeyGen <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">RGen</span> <span class="op">=</span> BlumBlumShub<span class="op">()</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">generateKey</span><span class="op">(</span><span class="va">byteLen</span><span class="op">:</span> <span class="dt">Int</span><span class="op">):</span> <span class="dt">BitByteList</span> <span class="op">{</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> <span class="va">bytes</span> <span class="op">=</span> ByteArray<span class="op">(</span>byteLen<span class="op">).</span>apply <span class="op">{</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>            RGen<span class="op">.</span>nextBytes<span class="op">(</span><span class="kw">this</span><span class="op">)</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="kw">return</span> BitByteList<span class="op">.</span>from<span class="op">(</span>bytes<span class="op">)</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="testowanie-klucza">Testowanie klucza</h2>
+<p>Zaimplementowano dwa testy, oba zaproponowane przez NIST.</p>
+<h3 id="monobit-test">Monobit Test</h3>
+<p>Weryfikuje proporcje zer i jedynek</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">monobitTest</span><span class="op">(</span><span class="va">key</span><span class="op">:</span> <span class="dt">BitByteList</span><span class="op">):</span> <span class="dt">Pair</span><span class="op">&lt;</span><span class="dt">Boolean</span>, <span class="dt">String</span><span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">sN</span> <span class="op">=</span> key<span class="op">.</span>toList<span class="op">().</span>fold<span class="op">(</span><span class="dv">0</span><span class="op">)</span> <span class="op">{</span> acc<span class="op">,</span> bitByte <span class="op">-&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        acc <span class="op">+</span> <span class="op">(</span><span class="dv">2</span> <span class="op">*</span> bitByte<span class="op">.</span>bitSum<span class="op">()</span> <span class="op">-</span> <span class="dv">8</span><span class="op">)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">sObs</span> <span class="op">=</span> sN <span class="op">/</span> sqrt<span class="op">(</span>key<span class="op">.</span>bitN<span class="op">.</span>toDouble<span class="op">())</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">pVal</span> <span class="op">=</span> Erf<span class="op">.</span>erfc<span class="op">(</span>sObs <span class="op">/</span> sqrt<span class="op">(</span><span class="fl">2.0</span><span class="op">))</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">return</span> <span class="op">(</span>pVal <span class="op">&gt;=</span> <span class="fl">0.01</span><span class="op">)</span> to <span class="st">&quot;p-value = </span><span class="ss">$pVal</span><span class="st">&quot;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="serial-test">Serial Test</h3>
+<p>Weryfikuje powtarzalność podciągów</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">serialTest</span><span class="op">(</span><span class="va">key</span><span class="op">:</span> <span class="dt">BitByteList</span><span class="op">):</span> <span class="dt">Pair</span><span class="op">&lt;</span><span class="dt">Boolean</span>, <span class="dt">String</span><span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">n</span> <span class="op">=</span> key<span class="op">.</span>bitN</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">m</span> <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">e</span> <span class="op">=</span> key<span class="op">.</span>toBinString<span class="op">().</span>let <span class="op">{</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;</span><span class="ss">$it${</span>it<span class="op">.</span>take<span class="op">(</span>m<span class="op">-</span><span class="dv">1</span><span class="op">)</span><span class="ss">}</span><span class="st">&quot;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">fiSq0</span> <span class="op">=</span> e<span class="op">.</span>calculateFiSq<span class="op">(</span>n<span class="op">,</span> m<span class="op">)</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">fiSq1</span> <span class="op">=</span> e<span class="op">.</span>calculateFiSq<span class="op">(</span>n<span class="op">,</span> m <span class="op">-</span> <span class="dv">1</span><span class="op">)</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">fiSq2</span> <span class="op">=</span> e<span class="op">.</span>calculateFiSq<span class="op">(</span>n<span class="op">,</span> m <span class="op">-</span> <span class="dv">2</span><span class="op">)</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">delta</span> <span class="op">=</span> fiSq0 <span class="op">-</span> fiSq1</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">deltaSq</span> <span class="op">=</span> fiSq0 <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> fiSq1 <span class="op">+</span> fiSq2</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">pVal1</span> <span class="op">=</span> IncompleteGamma<span class="op">.</span>Upper<span class="op">.</span>value<span class="op">((</span><span class="fl">2.0</span><span class="op">).</span>pow<span class="op">(</span>m <span class="op">-</span> <span class="dv">2</span><span class="op">),</span> delta<span class="op">)</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">pVal2</span> <span class="op">=</span> IncompleteGamma<span class="op">.</span>Upper<span class="op">.</span>value<span class="op">((</span><span class="fl">2.0</span><span class="op">).</span>pow<span class="op">(</span>m <span class="op">-</span> <span class="dv">3</span><span class="op">),</span> deltaSq<span class="op">)</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">return</span> <span class="op">(</span>pVal1 <span class="op">&gt;=</span> <span class="fl">0.01</span> <span class="op">&amp;&amp;</span> pVal2 <span class="op">&gt;=</span> <span class="fl">0.01</span><span class="op">)</span> to <span class="st">&quot;p-values = (</span><span class="ss">$pVal1</span><span class="st">, </span><span class="ss">$pVal2</span><span class="st">)&quot;</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h2 id="działanie">Działanie</h2>
+<p>Testowanie odbywało się poprzez zaszyfrowanie tekstu w języku
+Kantońskim.</p>
+<pre class="text"><code>1. 香港人口稠密，擁有眾多島嶼，加上道路使用率之高，位居世界前列，為了應付龐大的人口交通流量，香港興建了多座跨海大橋
+2. e9a699e6b8afe4babae58fa3e7a8a0e5af86efbc8ce69381e69c89e79cbee5a49...
+3. f16b0309f7fb0750f63f07639478608e1c1c19be1d4870c7874001063fe0f255c...
+4. 18cd9aef4f54e3ea4cda88c073d0c06bb39af60291aee34661dc88e1a35e17f15...
+5. e9a699e6b8afe4babae58fa3e7a8a0e5af86efbc8ce69381e69c89e79cbee5a49...
+6. 香港人口稠密，擁有眾多島嶼，加上道路使用率之高，位居世界前列，為了應付龐大的人口交通流量，香港興建了多座跨海大橋
+7. diff = 0
+8. Is key random (monobit test)? Yes [p-value = 1.1727406534372888]
+9. Is key random (serial test)? Yes [p-values = (0.05368004689518295, 0.11053965513741008)]</code></pre>
+<p>Linijki przedstawiają kolejno:</p>
+<ol type="1">
+<li>Tekst otwarty</li>
+<li>…i jego binarną formę</li>
+<li>Klucz</li>
+<li>Binarna forma tekstu zaszyfrowanego</li>
+<li>Binarna forma tekstu odszyfrowanego (taka sama jak w punkcie
+<strong>2</strong>)</li>
+<li>Tekst odszyfrowany</li>
+<li>Różnica między tekstami (0 oznacza że są takie same)</li>
+<li>Wynik testu Monobit</li>
+<li>Wynik testu Serial</li>
+</ol>
+</body>
+</html>

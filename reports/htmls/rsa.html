@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>RSA</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="markdown.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">RSA</h1>
+</header>
+<p><em>Marcin Kocot</em></p>
+<p>Zadanie wykonano w języku Kotlin, przy użyciu build-toola Bazel.</p>
+<hr />
+<h2 id="konfiguracja-rsa">Konfiguracja RSA</h2>
+<p>Była przedstawiana przez klasę <code>RSA</code>, z wybraną długością
+składowej <em>modulus</em>. Długość czynnika <em>p</em> stanowiła jedną
+trzecią długości modulusa, a długość <em>q</em> dwie trzecie (tak, żeby
+suma się zgadzała, ale długości różniły się bardzo). Losowanie liczb
+odbyło się używając zaimplementowanego wcześniej generatora
+Blum-Blum-Shub.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> RSA<span class="op">(</span><span class="va">modulusBits</span><span class="op">:</span> <span class="dt">Int</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">private</span> <span class="kw">val</span> <span class="va">n</span><span class="op">:</span> BigInteger  <span class="co">// modulus</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">private</span> <span class="kw">val</span> <span class="va">e</span><span class="op">:</span> BigInteger  <span class="co">// public exponent</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">private</span> <span class="kw">val</span> <span class="va">d</span><span class="op">:</span> BigInteger  <span class="co">// private exponent</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> <span class="va">publicKey</span><span class="op">:</span> Key</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> <span class="va">privateKey</span><span class="op">:</span> Key</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  init <span class="op">{</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>modulusBits <span class="op">&lt;</span> <span class="dv">512</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      error<span class="op">(</span><span class="st">&quot;You must be stupid to use not even RSA-512!&quot;</span><span class="op">)</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">pLen</span> <span class="op">=</span> modulusBits<span class="op">.</span>floorDiv<span class="op">(</span><span class="dv">3</span><span class="op">)</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">qLen</span> <span class="op">=</span> modulusBits <span class="op">-</span> pLen</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">rGen</span><span class="op">:</span> Random <span class="op">=</span> BlumBlumShub<span class="op">()</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">p</span> <span class="op">=</span> BigInteger<span class="op">.</span>probablePrime<span class="op">(</span>pLen<span class="op">,</span> rGen<span class="op">)</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">q</span> <span class="op">=</span> BigInteger<span class="op">.</span>probablePrime<span class="op">(</span>qLen<span class="op">,</span> rGen<span class="op">)</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">f</span> <span class="op">=</span> lcm<span class="op">(</span>p <span class="op">-</span> BigInteger<span class="op">.</span>ONE<span class="op">,</span> q <span class="op">-</span> BigInteger<span class="op">.</span>ONE<span class="op">)</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="co">// arbitrary - lower bit length ensures e &lt; f</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">eLen</span> <span class="op">=</span> f<span class="op">.</span>bitLength<span class="op">()</span> <span class="op">-</span> <span class="dv">3</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> p <span class="op">*</span> q</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    e <span class="op">=</span> BigInteger<span class="op">.</span>probablePrime<span class="op">(</span>eLen<span class="op">,</span> rGen<span class="op">)</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    d <span class="op">=</span> e<span class="op">.</span>modInverse<span class="op">(</span>f<span class="op">)</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    publicKey <span class="op">=</span> Key<span class="op">(</span>n<span class="op">,</span> e<span class="op">)</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    privateKey <span class="op">=</span> Key<span class="op">(</span>n<span class="op">,</span> d<span class="op">)</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="kw">private</span> <span class="kw">fun</span> <span class="fu">lcm</span><span class="op">(</span><span class="va">a</span><span class="op">:</span> <span class="dt">BigInteger</span><span class="op">,</span> <span class="va">b</span><span class="op">:</span> <span class="dt">BigInteger</span><span class="op">):</span> <span class="dt">BigInteger</span> <span class="op">=</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="op">(</span>a <span class="op">*</span> b<span class="op">)</span> <span class="op">/</span> a<span class="op">.</span>gcd<span class="op">(</span>b<span class="op">)</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Wiadomość była szyfrowana prostą funkcją (działającą w obie strony -
+szyfrowała gdy otrzymała klucz publiczny, odszyfrowywała gdy
+prywatny)</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">crypt</span><span class="op">(</span><span class="va">message</span><span class="op">:</span> <span class="dt">BigInteger</span><span class="op">):</span> <span class="dt">BigInteger</span> <span class="op">=</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    message<span class="op">.</span>modPow<span class="op">(</span>exponent<span class="op">,</span> modulus<span class="op">)</span></span></code></pre></div>
+<hr />
+<h2 id="uruchamianie">Uruchamianie</h2>
+<p>W każdym wystąpieniu <code>&lt;duża liczba&gt;</code>, prawdziwy
+output posiada dużą liczbę, ale zostały one tu usunięte celem poprawy
+czytelności sprawozdania. Testy wykonywano na tym samym tekście po
+Kantońsku. Testy wykonywane były dla <code>RSA(1024)</code>, ale wyższe
+długości modulusa też powinny zadziałać.</p>
+<pre class="text"><code>1. Key(modulus=&lt;duża liczba&gt;, exponent=&lt;duża liczba&gt;)
+2. Key(modulus=&lt;duża liczba&gt;, exponent=&lt;duża liczba&gt;)
+3. 香港人口稠密，擁有眾多島嶼，加上道路使用率之高，位居世界前列，為了應付龐大的人口交通流量，香港興建了多座跨海大橋
+4. e9a699e6b8afe4babae58fa3e7a8a0e5af86efbc8ce69381e69c89e79cbee...
+5. 54fa70893ee76ea872c413675c7fc475f931bdb97ad6ce2869fbe61135a16...
+6. e9a699e6b8afe4babae58fa3e7a8a0e5af86efbc8ce69381e69c89e79cbee...
+7. 香港人口稠密，擁有眾多島嶼，加上道路使用率之高，位居世界前列，為了應付龐大的人口交通流量，香港興建了多座跨海大橋
+8. Do texts match? Yes!</code></pre>
+<ol type="1">
+<li>Klucz publiczny</li>
+<li>Klucz prywatny</li>
+<li>Tekst otwarty</li>
+<li>Binarna forma tekstu otwartego</li>
+<li>Binarna forma tekstu zaszyfrowanego kluczem publicznym</li>
+<li>Binarna forma tekstu odszyfrowanego kluczem prywatnym</li>
+<li>Tekst odszyfrowany</li>
+<li>Weryfikacja poprawności odszyfrowywania</li>
+</ol>
+</body>
+</html>

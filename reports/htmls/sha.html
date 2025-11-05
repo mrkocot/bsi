@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>SHA-256</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="markdown.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">SHA-256</h1>
+</header>
+<p><em>Marcin Kocot</em></p>
+<p>Zadanie wykonano w języku Kotlin, przy użyciu build-toola Bazel.</p>
+<hr />
+<h2 id="algorytm">Algorytm</h2>
+<p>Klasa <code>SHA256</code> zaczyna się od zdefiniowania stałych,
+potrzebnych do algorytmu</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">val</span> <span class="va">H</span> <span class="op">=</span> listOf<span class="op">&lt;</span><span class="kw">Long</span><span class="op">&gt;(</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="bn">0x6a09e667</span><span class="op">,</span> <span class="bn">0xbb67ae85</span><span class="op">,</span> <span class="bn">0x3c6ef372</span><span class="op">,</span> <span class="bn">0xa54ff53a</span><span class="op">,</span> </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="bn">0x510e527f</span><span class="op">,</span> <span class="bn">0x9b05688c</span><span class="op">,</span> <span class="bn">0x1f83d9ab</span><span class="op">,</span> <span class="bn">0x5be0cd19</span><span class="op">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">val</span> <span class="va">K</span> <span class="op">=</span> listOf<span class="op">&lt;</span><span class="kw">Long</span><span class="op">&gt;(</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="bn">0x428a2f98</span><span class="op">,</span> <span class="bn">0x71374491</span><span class="op">,</span> <span class="bn">0xb5c0fbcf</span><span class="op">,</span> <span class="bn">0xe9b5dba5</span><span class="op">,</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="bn">0x3956c25b</span><span class="op">,</span> <span class="bn">0x59f111f1</span><span class="op">,</span> <span class="bn">0x923f82a4</span><span class="op">,</span> <span class="bn">0xab1c5ed5</span><span class="op">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="bn">0xd807aa98</span><span class="op">,</span> <span class="bn">0x12835b01</span><span class="op">,</span> <span class="bn">0x243185be</span><span class="op">,</span> <span class="bn">0x550c7dc3</span><span class="op">,</span> </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="bn">0x72be5d74</span><span class="op">,</span> <span class="bn">0x80deb1fe</span><span class="op">,</span> <span class="bn">0x9bdc06a7</span><span class="op">,</span> <span class="bn">0xc19bf174</span><span class="op">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="bn">0xe49b69c1</span><span class="op">,</span> <span class="bn">0xefbe4786</span><span class="op">,</span> <span class="bn">0x0fc19dc6</span><span class="op">,</span> <span class="bn">0x240ca1cc</span><span class="op">,</span> </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="bn">0x2de92c6f</span><span class="op">,</span> <span class="bn">0x4a7484aa</span><span class="op">,</span> <span class="bn">0x5cb0a9dc</span><span class="op">,</span> <span class="bn">0x76f988da</span><span class="op">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="bn">0x983e5152</span><span class="op">,</span> <span class="bn">0xa831c66d</span><span class="op">,</span> <span class="bn">0xb00327c8</span><span class="op">,</span> <span class="bn">0xbf597fc7</span><span class="op">,</span> </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="bn">0xc6e00bf3</span><span class="op">,</span> <span class="bn">0xd5a79147</span><span class="op">,</span> <span class="bn">0x06ca6351</span><span class="op">,</span> <span class="bn">0x14292967</span><span class="op">,</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="bn">0x27b70a85</span><span class="op">,</span> <span class="bn">0x2e1b2138</span><span class="op">,</span> <span class="bn">0x4d2c6dfc</span><span class="op">,</span> <span class="bn">0x53380d13</span><span class="op">,</span> </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="bn">0x650a7354</span><span class="op">,</span> <span class="bn">0x766a0abb</span><span class="op">,</span> <span class="bn">0x81c2c92e</span><span class="op">,</span> <span class="bn">0x92722c85</span><span class="op">,</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="bn">0xa2bfe8a1</span><span class="op">,</span> <span class="bn">0xa81a664b</span><span class="op">,</span> <span class="bn">0xc24b8b70</span><span class="op">,</span> <span class="bn">0xc76c51a3</span><span class="op">,</span> </span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="bn">0xd192e819</span><span class="op">,</span> <span class="bn">0xd6990624</span><span class="op">,</span> <span class="bn">0xf40e3585</span><span class="op">,</span> <span class="bn">0x106aa070</span><span class="op">,</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="bn">0x19a4c116</span><span class="op">,</span> <span class="bn">0x1e376c08</span><span class="op">,</span> <span class="bn">0x2748774c</span><span class="op">,</span> <span class="bn">0x34b0bcb5</span><span class="op">,</span> </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="bn">0x391c0cb3</span><span class="op">,</span> <span class="bn">0x4ed8aa4a</span><span class="op">,</span> <span class="bn">0x5b9cca4f</span><span class="op">,</span> <span class="bn">0x682e6ff3</span><span class="op">,</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="bn">0x748f82ee</span><span class="op">,</span> <span class="bn">0x78a5636f</span><span class="op">,</span> <span class="bn">0x84c87814</span><span class="op">,</span> <span class="bn">0x8cc70208</span><span class="op">,</span> </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="bn">0x90befffa</span><span class="op">,</span> <span class="bn">0xa4506ceb</span><span class="op">,</span> <span class="bn">0xbef9a3f7</span><span class="op">,</span> <span class="bn">0xc67178f2</span><span class="op">,</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="op">)</span></span></code></pre></div>
+<h3 id="rozszerzanie">Rozszerzanie</h3>
+<p>Zdefiniowano klasę <code>Words16</code>, przedstawiającą 16 słów (w
+znaczeniu algorytmu). Jedyną ich funkcją było rozszerzanie się do 64
+słów:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Words16<span class="op">(</span><span class="va">words</span><span class="op">:</span> <span class="dt">List</span>&lt;<span class="va">BitByteList</span>&gt;<span class="op">)</span> <span class="op">:</span> <span class="dt">Words</span><span class="op">(</span>16<span class="op">,</span> <span class="va">words</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fun</span> <span class="fu">expand</span><span class="op">():</span> <span class="dt">Words64</span> <span class="op">{</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> <span class="va">w</span> <span class="op">=</span> <span class="kw">this</span><span class="op">.</span>words<span class="op">.</span>toMutableList<span class="op">()</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span>i <span class="kw">in</span> <span class="fl">16..63</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>            <span class="kw">val</span> <span class="va">s0</span> <span class="op">=</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                w<span class="op">[</span>i<span class="op">-</span><span class="dv">15</span><span class="op">].</span>rotateRight<span class="op">(</span><span class="dv">7</span><span class="op">)</span> xor</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                  w<span class="op">[</span>i<span class="op">-</span><span class="dv">15</span><span class="op">].</span>rotateRight<span class="op">(</span><span class="dv">18</span><span class="op">)</span> xor</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                  w<span class="op">[</span>i<span class="op">-</span><span class="dv">15</span><span class="op">].</span>shiftRight<span class="op">(</span><span class="dv">3</span><span class="op">)</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>            <span class="kw">val</span> <span class="va">s1</span> <span class="op">=</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                w<span class="op">[</span>i<span class="op">-</span><span class="dv">2</span><span class="op">].</span>rotateRight<span class="op">(</span><span class="dv">17</span><span class="op">)</span> xor</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                  w<span class="op">[</span>i<span class="op">-</span><span class="dv">2</span><span class="op">].</span>rotateRight<span class="op">(</span><span class="dv">19</span><span class="op">)</span> xor</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                  w<span class="op">[</span>i<span class="op">-</span><span class="dv">2</span><span class="op">].</span>shiftRight<span class="op">(</span><span class="dv">10</span><span class="op">)</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>            w<span class="op">.</span>add<span class="op">(</span>BitByteList<span class="op">.</span>numberSum<span class="op">(</span>w<span class="op">[</span>i<span class="op">-</span><span class="dv">16</span><span class="op">],</span> s0<span class="op">,</span> w<span class="op">[</span>i<span class="op">-</span><span class="dv">7</span><span class="op">],</span> s1<span class="op">)</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>              <span class="op">.</span>takeLastExactly<span class="op">(</span><span class="dv">4</span><span class="op">))</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="kw">return</span> Words64<span class="op">(</span>w<span class="op">.</span>toList<span class="op">())</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="krok">Krok</h3>
+<p>Dzięki zaimplementowanej wcześniej (i używanej do wszystkich zadań)
+klasy reprezentującej ciąg bitów (oraz dzięki możliwościom języka
+Kotlin), krok algorytmu SHA-2 można było zdefiniować używając ładnie
+wyglądających funkcji typu <code>infix</code> (czyli zamiast napisać
+<code>A.xor(B)</code> można było użyć <code>A xor B</code>).</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode kotlin"><code class="sourceCode kotlin"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="kw">fun</span> <span class="fu">step</span><span class="op">(</span><span class="va">i</span><span class="op">:</span> <span class="dt">Int</span><span class="op">,</span> <span class="va">w</span><span class="op">:</span> <span class="dt">Words64</span><span class="op">):</span> <span class="dt">Hash</span> <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">s1</span> <span class="op">=</span> e<span class="op">.</span>rotateRight<span class="op">(</span><span class="dv">6</span><span class="op">)</span> xor e<span class="op">.</span>rotateRight<span class="op">(</span><span class="dv">11</span><span class="op">)</span> xor e<span class="op">.</span>rotateRight<span class="op">(</span><span class="dv">25</span><span class="op">)</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">ch</span> <span class="op">=</span> <span class="op">(</span>e and f<span class="op">)</span> xor <span class="op">(</span>e<span class="op">.</span>not<span class="op">()</span> and g<span class="op">)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">t1</span> <span class="op">=</span> BitByteList<span class="op">.</span>numberSum<span class="op">(</span>h<span class="op">,</span> s1<span class="op">,</span> ch<span class="op">,</span> K<span class="op">[</span>i<span class="op">],</span> w<span class="op">[</span>i<span class="op">])</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">s0</span> <span class="op">=</span> a<span class="op">.</span>rotateRight<span class="op">(</span><span class="dv">2</span><span class="op">)</span> xor a<span class="op">.</span>rotateRight<span class="op">(</span><span class="dv">13</span><span class="op">)</span> xor a<span class="op">.</span>rotateRight<span class="op">(</span><span class="dv">22</span><span class="op">)</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">maj</span> <span class="op">=</span> <span class="op">(</span>a and b<span class="op">)</span> xor <span class="op">(</span>a and c<span class="op">)</span> xor <span class="op">(</span>b and c<span class="op">)</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">t2</span> <span class="op">=</span> s0 numberAdd maj</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">return</span> Hash<span class="op">(</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        t1 numberAdd t2<span class="op">,</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        a<span class="op">,</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        b<span class="op">,</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        c<span class="op">,</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        d numberAdd t1<span class="op">,</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        e<span class="op">,</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        f<span class="op">,</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        g<span class="op">,</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">)</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="uruchamianie">Uruchamianie</h2>
+<p>Testy wykonano na dwóch tekstach - różniły się tylko jednym znakiem
+interpunkcyjnym. Wszystkie hasze zweryfikowano w internetowym
+generatorze SHA-256.</p>
+<pre class="text"><code>1. This project is a considerably improved version of the NIST Statistical Test Suite (STS), a collection of tests used in the evaluation of the randomness of bitstreams of data.
+2. This project is a considerably improved version of the NIST Statistical Test Suite (STS). a collection of tests used in the evaluation of the randomness of bitstreams of data.
+3. ee2443c680a0ff4f84a68addbf168904d42d1d43b144ad397802ab779b49405c
+4. ad75ee0425fb214ece9888434ff8db48aaf6444c9d1128d5ef464141ceb89e28
+5. 50.78125%</code></pre>
+<ol type="1">
+<li>Tekst 1</li>
+<li>Tekst 2</li>
+<li>SHA-256 tesktu 1</li>
+<li>SHA-256 tekstu 2</li>
+<li>Ile procent bitów było różnych w haszach (zarówno wartość dużo
+poniżej jak i dużo powyżej 50% mogłyby oznaczać zależenie tych haszy od
+siebie)</li>
+</ol>
+</body>
+</html>
