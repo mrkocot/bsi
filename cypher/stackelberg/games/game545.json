@@ -1,0 +1,147 @@
+{
+  "resources": {
+    "res1": {
+      "name": "The questionable clockwork",
+      "value": 105.11,
+      "attackGain": 778.73,
+      "defenseCost": {
+        "def1": 57.79,
+        "def2": 88.8,
+        "def3": 44.46,
+        "def4": 77.42
+      },
+      "attackCost": {
+        "atk1": 28.43,
+        "atk2": 35.7,
+        "atk3": 58.72,
+        "atk4": 45.29,
+        "atk5": 77.11
+      }
+    },
+    "res2": {
+      "name": "The functional styling",
+      "value": 209.69,
+      "attackGain": 870.48,
+      "defenseCost": {
+        "def1": 95.65,
+        "def2": 14.7,
+        "def3": 22.9,
+        "def4": 73.5
+      },
+      "attackCost": {
+        "atk1": 33.01,
+        "atk2": 1.54,
+        "atk3": 17.16,
+        "atk4": 95.86,
+        "atk5": 32.5
+      }
+    },
+    "res3": {
+      "name": "The aromatic graduate",
+      "value": 153.39,
+      "attackGain": 978.31,
+      "defenseCost": {
+        "def1": 72.01,
+        "def2": 93.62,
+        "def3": 45.48,
+        "def4": 6.36
+      },
+      "attackCost": {
+        "atk1": 57.8,
+        "atk2": 25.4,
+        "atk3": 52.25,
+        "atk4": 49.7,
+        "atk5": 59.26
+      }
+    },
+    "res4": {
+      "name": "The concerned photo",
+      "value": 123.9,
+      "attackGain": 778.77,
+      "defenseCost": {
+        "def1": 15.94,
+        "def2": 13.06,
+        "def3": 73.71,
+        "def4": 86.66
+      },
+      "attackCost": {
+        "atk1": 36.76,
+        "atk2": 20.44,
+        "atk3": 97.5,
+        "atk4": 55.36,
+        "atk5": 46.5
+      }
+    },
+    "res5": {
+      "name": "The rare crest",
+      "value": 387.65,
+      "attackGain": 182.89,
+      "defenseCost": {
+        "def1": 4.01,
+        "def2": 38.59,
+        "def3": 30.93,
+        "def4": 13.77
+      },
+      "attackCost": {
+        "atk1": 96.57,
+        "atk2": 41.11,
+        "atk3": 40.33,
+        "atk4": 33.4,
+        "atk5": 2.68
+      }
+    }
+  },
+  "defences": {
+    "def1": "Groan the callous bootee",
+    "def2": "Exceed the truculent flute",
+    "def3": "Need the pathetic fratricide",
+    "def4": "Troubleshoot the x-rated tremor"
+  },
+  "attacks": {
+    "atk1": {
+      "name": "Slay the gorgeous advocacy",
+      "chance": {
+        "def1": 0.0,
+        "def2": 0.36,
+        "def3": 0.78,
+        "def4": 0.57
+      }
+    },
+    "atk2": {
+      "name": "Officiate the apathetic hand",
+      "chance": {
+        "def1": 0.99,
+        "def2": 0.94,
+        "def3": 0.42,
+        "def4": 0.71
+      }
+    },
+    "atk3": {
+      "name": "Intensify the robust bottling",
+      "chance": {
+        "def1": 0.55,
+        "def2": 0.64,
+        "def3": 0.8,
+        "def4": 0.36
+      }
+    },
+    "atk4": {
+      "name": "Exhibit the thankful tip",
+      "chance": {
+        "def1": 0.32,
+        "def2": 0.28,
+        "def3": 0.63,
+        "def4": 0.67
+      }
+    },
+    "atk5": {
+      "name": "Update the taboo sidestream",
+      "chance": {
+        "def1": 0.46,
+        "def2": 0.11,
+        "def3": 0.75,
+        "def4": 0.38
+      }
+    }
+  }
+}

@@ -32,6 +32,7 @@ maven_install(
         "org.apache.commons:commons-math3:3.6.1",  # transitive CVE-2020-15250
         "org.apache.commons:commons-numbers-gamma:1.1",
         "org.bouncycastle:bcprov-jdk18on:1.77",
+        "com.fasterxml.jackson.module:jackson-module-kotlin:2.17.1",
     ],
     fetch_sources = True,
     repositories = [

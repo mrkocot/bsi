@@ -1,0 +1,458 @@
+{
+  "resources": {
+    "res1": {
+      "name": "The statuesque shade with a wasp",
+      "value": 120.72,
+      "attackGain": 721.92,
+      "defenseCost": {
+        "def1": 74.47,
+        "def2": 55.09,
+        "def3": 61.86,
+        "def4": 15.5,
+        "def5": 11.32,
+        "def6": 87.65,
+        "def7": 55.79,
+        "def8": 23.78,
+        "def9": 44.65,
+        "def10": 38.07
+      },
+      "attackCost": {
+        "atk1": 19.86,
+        "atk2": 84.46,
+        "atk3": 67.64,
+        "atk4": 72.0,
+        "atk5": 11.16,
+        "atk6": 94.69,
+        "atk7": 40.96,
+        "atk8": 69.51,
+        "atk9": 8.57,
+        "atk10": 57.68
+      }
+    },
+    "res2": {
+      "name": "The earthy mapping",
+      "value": 325.53999999999996,
+      "attackGain": 47.73,
+      "defenseCost": {
+        "def1": 93.76,
+        "def2": 75.76,
+        "def3": 11.5,
+        "def4": 7.48,
+        "def5": 76.72,
+        "def6": 46.38,
+        "def7": 73.19,
+        "def8": 25.67,
+        "def9": 0.03,
+        "def10": 76.04
+      },
+      "attackCost": {
+        "atk1": 31.8,
+        "atk2": 51.62,
+        "atk3": 55.48,
+        "atk4": 64.91,
+        "atk5": 52.45,
+        "atk6": 67.65,
+        "atk7": 71.83,
+        "atk8": 40.61,
+        "atk9": 10.31,
+        "atk10": 20.46
+      }
+    },
+    "res3": {
+      "name": "The loose bootee",
+      "value": 111.38,
+      "attackGain": 972.49,
+      "defenseCost": {
+        "def1": 33.02,
+        "def2": 78.55,
+        "def3": 80.46,
+        "def4": 97.42,
+        "def5": 80.06,
+        "def6": 83.46,
+        "def7": 49.17,
+        "def8": 65.25,
+        "def9": 3.02,
+        "def10": 50.38
+      },
+      "attackCost": {
+        "atk1": 53.12,
+        "atk2": 31.32,
+        "atk3": 79.57,
+        "atk4": 96.72,
+        "atk5": 62.35,
+        "atk6": 60.38,
+        "atk7": 48.17,
+        "atk8": 94.14,
+        "atk9": 44.03,
+        "atk10": 37.69
+      }
+    },
+    "res4": {
+      "name": "The hollow trolley with a appearance",
+      "value": 229.76,
+      "attackGain": 646.46,
+      "defenseCost": {
+        "def1": 71.67,
+        "def2": 63.31,
+        "def3": 44.75,
+        "def4": 86.83,
+        "def5": 86.45,
+        "def6": 62.4,
+        "def7": 47.04,
+        "def8": 71.68,
+        "def9": 29.56,
+        "def10": 70.72
+      },
+      "attackCost": {
+        "atk1": 76.11,
+        "atk2": 47.94,
+        "atk3": 71.32,
+        "atk4": 78.22,
+        "atk5": 90.89,
+        "atk6": 44.72,
+        "atk7": 42.71,
+        "atk8": 67.3,
+        "atk9": 4.43,
+        "atk10": 92.16
+      }
+    },
+    "res5": {
+      "name": "The habitual crime",
+      "value": 111.24,
+      "attackGain": 601.51,
+      "defenseCost": {
+        "def1": 89.59,
+        "def2": 31.39,
+        "def3": 28.91,
+        "def4": 73.89,
+        "def5": 96.66,
+        "def6": 25.43,
+        "def7": 71.77,
+        "def8": 79.95,
+        "def9": 36.49,
+        "def10": 98.85
+      },
+      "attackCost": {
+        "atk1": 16.1,
+        "atk2": 33.48,
+        "atk3": 90.9,
+        "atk4": 42.88,
+        "atk5": 68.26,
+        "atk6": 0.79,
+        "atk7": 42.66,
+        "atk8": 90.11,
+        "atk9": 58.66,
+        "atk10": 49.47
+      }
+    },
+    "res6": {
+      "name": "The elite freighter with a luggage",
+      "value": 200.11,
+      "attackGain": 402.62,
+      "defenseCost": {
+        "def1": 18.73,
+        "def2": 12.96,
+        "def3": 29.42,
+        "def4": 10.01,
+        "def5": 83.29,
+        "def6": 18.43,
+        "def7": 10.97,
+        "def8": 67.38,
+        "def9": 22.4,
+        "def10": 62.21
+      },
+      "attackCost": {
+        "atk1": 12.68,
+        "atk2": 15.46,
+        "atk3": 62.28,
+        "atk4": 36.41,
+        "atk5": 99.12,
+        "atk6": 18.23,
+        "atk7": 85.19,
+        "atk8": 33.04,
+        "atk9": 55.38,
+        "atk10": 26.63
+      }
+    },
+    "res7": {
+      "name": "The direful help",
+      "value": 100.06,
+      "attackGain": 34.46,
+      "defenseCost": {
+        "def1": 96.62,
+        "def2": 82.35,
+        "def3": 73.8,
+        "def4": 75.16,
+        "def5": 28.88,
+        "def6": 51.0,
+        "def7": 93.58,
+        "def8": 22.68,
+        "def9": 67.84,
+        "def10": 0.05
+      },
+      "attackCost": {
+        "atk1": 53.98,
+        "atk2": 34.8,
+        "atk3": 26.3,
+        "atk4": 5.22,
+        "atk5": 5.51,
+        "atk6": 75.26,
+        "atk7": 3.37,
+        "atk8": 17.84,
+        "atk9": 71.13,
+        "atk10": 52.05
+      }
+    },
+    "res8": {
+      "name": "The weary celebrity",
+      "value": 195.79000000000002,
+      "attackGain": 779.19,
+      "defenseCost": {
+        "def1": 82.13,
+        "def2": 83.08,
+        "def3": 90.52,
+        "def4": 79.0,
+        "def5": 89.91,
+        "def6": 63.12,
+        "def7": 12.54,
+        "def8": 62.55,
+        "def9": 17.0,
+        "def10": 29.37
+      },
+      "attackCost": {
+        "atk1": 28.28,
+        "atk2": 88.62,
+        "atk3": 21.54,
+        "atk4": 51.32,
+        "atk5": 14.99,
+        "atk6": 83.22,
+        "atk7": 84.29,
+        "atk8": 17.09,
+        "atk9": 43.41,
+        "atk10": 58.26
+      }
+    },
+    "res9": {
+      "name": "The ahead riot",
+      "value": 382.3,
+      "attackGain": 553.15,
+      "defenseCost": {
+        "def1": 11.91,
+        "def2": 4.75,
+        "def3": 46.04,
+        "def4": 28.35,
+        "def5": 78.43,
+        "def6": 50.19,
+        "def7": 81.28,
+        "def8": 32.61,
+        "def9": 14.14,
+        "def10": 57.71
+      },
+      "attackCost": {
+        "atk1": 46.9,
+        "atk2": 10.95,
+        "atk3": 50.6,
+        "atk4": 60.12,
+        "atk5": 8.62,
+        "atk6": 27.59,
+        "atk7": 28.69,
+        "atk8": 83.01,
+        "atk9": 4.04,
+        "atk10": 9.36
+      }
+    },
+    "res10": {
+      "name": "The silent tadpole",
+      "value": 342.95,
+      "attackGain": 70.33,
+      "defenseCost": {
+        "def1": 8.67,
+        "def2": 0.69,
+        "def3": 35.72,
+        "def4": 29.75,
+        "def5": 97.51,
+        "def6": 10.37,
+        "def7": 57.8,
+        "def8": 11.73,
+        "def9": 57.7,
+        "def10": 59.75
+      },
+      "attackCost": {
+        "atk1": 99.74,
+        "atk2": 7.85,
+        "atk3": 57.48,
+        "atk4": 65.48,
+        "atk5": 11.0,
+        "atk6": 78.52,
+        "atk7": 73.23,
+        "atk8": 32.85,
+        "atk9": 35.17,
+        "atk10": 85.49
+      }
+    }
+  },
+  "defences": {
+    "def1": "Copy the tranquil buffer",
+    "def2": "Promise the labored quartz",
+    "def3": "Post the pumped intervention",
+    "def4": "Classify the squalid licorice",
+    "def5": "Ride the tired jeans",
+    "def6": "Peep the screeching commission",
+    "def7": "Count the picayune subtitle",
+    "def8": "Correct the auspicious lymphocyte",
+    "def9": "Stick the spurious focus",
+    "def10": "Want the fast casualty"
+  },
+  "attacks": {
+    "atk1": {
+      "name": "Squeal the astonishing fratricide",
+      "chance": {
+        "def1": 0.52,
+        "def2": 0.71,
+        "def3": 0.6,
+        "def4": 0.55,
+        "def5": 0.47,
+        "def6": 0.58,
+        "def7": 0.37,
+        "def8": 0.99,
+        "def9": 0.83,
+        "def10": 0.71
+      }
+    },
+    "atk2": {
+      "name": "Form the sleepy minimum",
+      "chance": {
+        "def1": 0.54,
+        "def2": 0.03,
+        "def3": 0.62,
+        "def4": 0.37,
+        "def5": 0.72,
+        "def6": 0.69,
+        "def7": 0.31,
+        "def8": 0.68,
+        "def9": 0.16,
+        "def10": 0.66
+      }
+    },
+    "atk3": {
+      "name": "Telephone the heady collectivization",
+      "chance": {
+        "def1": 0.68,
+        "def2": 0.69,
+        "def3": 0.92,
+        "def4": 0.7,
+        "def5": 0.13,
+        "def6": 0.36,
+        "def7": 0.63,
+        "def8": 1.0,
+        "def9": 0.12,
+        "def10": 0.54
+      }
+    },
+    "atk4": {
+      "name": "Undergo the bright tomato",
+      "chance": {
+        "def1": 0.26,
+        "def2": 0.78,
+        "def3": 0.31,
+        "def4": 0.88,
+        "def5": 0.47,
+        "def6": 0.89,
+        "def7": 0.42,
+        "def8": 0.74,
+        "def9": 0.99,
+        "def10": 0.03
+      }
+    },
+    "atk5": {
+      "name": "Publicize the icky circulation",
+      "chance": {
+        "def1": 0.04,
+        "def2": 0.89,
+        "def3": 0.9,
+        "def4": 0.92,
+        "def5": 0.34,
+        "def6": 0.22,
+        "def7": 0.18,
+        "def8": 0.88,
+        "def9": 0.91,
+        "def10": 0.57
+      }
+    },
+    "atk6": {
+      "name": "Practice the alive meteorology",
+      "chance": {
+        "def1": 0.96,
+        "def2": 0.13,
+        "def3": 0.74,
+        "def4": 0.79,
+        "def5": 0.03,
+        "def6": 0.75,
+        "def7": 0.56,
+        "def8": 0.56,
+        "def9": 0.6,
+        "def10": 0.47
+      }
+    },
+    "atk7": {
+      "name": "Sweat the slippery cake",
+      "chance": {
+        "def1": 0.5,
+        "def2": 0.17,
+        "def3": 0.26,
+        "def4": 0.92,
+        "def5": 0.42,
+        "def6": 0.5,
+        "def7": 0.18,
+        "def8": 0.7,
+        "def9": 0.14,
+        "def10": 0.64
+      }
+    },
+    "atk8": {
+      "name": "Man the historical waffle",
+      "chance": {
+        "def1": 0.39,
+        "def2": 0.71,
+        "def3": 0.21,
+        "def4": 0.34,
+        "def5": 0.35,
+        "def6": 0.53,
+        "def7": 0.2,
+        "def8": 0.04,
+        "def9": 0.69,
+        "def10": 0.75
+      }
+    },
+    "atk9": {
+      "name": "Detect the unbecoming descendant",
+      "chance": {
+        "def1": 0.5,
+        "def2": 0.01,
+        "def3": 0.09,
+        "def4": 0.7,
+        "def5": 0.23,
+        "def6": 0.72,
+        "def7": 0.46,
+        "def8": 0.95,
+        "def9": 0.8,
+        "def10": 0.81
+      }
+    },
+    "atk10": {
+      "name": "Man the high-pitched crisis",
+      "chance": {
+        "def1": 0.43,
+        "def2": 0.41,
+        "def3": 0.85,
+        "def4": 0.73,
+        "def5": 0.67,
+        "def6": 0.72,
+        "def7": 0.94,
+        "def8": 0.43,
+        "def9": 0.33,
+        "def10": 0.15
+      }
+    }
+  }
+}

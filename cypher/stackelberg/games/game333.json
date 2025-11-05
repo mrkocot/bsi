@@ -1,0 +1,80 @@
+{
+  "resources": {
+    "res1": {
+      "name": "The itchy chestnut",
+      "value": 147.4,
+      "attackGain": 173.18,
+      "defenseCost": {
+        "def1": 90.87,
+        "def2": 5.56,
+        "def3": 88.92
+      },
+      "attackCost": {
+        "atk1": 86.32,
+        "atk2": 57.97,
+        "atk3": 3.89
+      }
+    },
+    "res2": {
+      "name": "The historical autumn",
+      "value": 164.20999999999998,
+      "attackGain": 201.7,
+      "defenseCost": {
+        "def1": 77.81,
+        "def2": 70.01,
+        "def3": 38.31
+      },
+      "attackCost": {
+        "atk1": 40.98,
+        "atk2": 82.77,
+        "atk3": 60.17
+      }
+    },
+    "res3": {
+      "name": "The habitual toffee",
+      "value": 128.46,
+      "attackGain": 125.78,
+      "defenseCost": {
+        "def1": 78.99,
+        "def2": 55.79,
+        "def3": 16.84
+      },
+      "attackCost": {
+        "atk1": 90.17,
+        "atk2": 14.83,
+        "atk3": 33.07
+      }
+    }
+  },
+  "defences": {
+    "def1": "Utilize the old-fashioned staircase",
+    "def2": "Symbolize the warlike offense",
+    "def3": "Keep the alive sweatshop"
+  },
+  "attacks": {
+    "atk1": {
+      "name": "Harm the utter transformation",
+      "chance": {
+        "def1": 0.1,
+        "def2": 0.6,
+        "def3": 0.12
+      }
+    },
+    "atk2": {
+      "name": "Interfere the good metal",
+      "chance": {
+        "def1": 0.27,
+        "def2": 0.02,
+        "def3": 0.13
+      }
+    },
+    "atk3": {
+      "name": "Water the uninterested horst",
+      "chance": {
+        "def1": 0.44,
+        "def2": 0.91,
+        "def3": 0.11
+      }
+    }
+  }
+}

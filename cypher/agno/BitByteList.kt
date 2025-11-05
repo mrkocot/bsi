@@ -19,6 +19,9 @@ class BitByteList(private val bitBytes: List<BitByte>) {
   operator fun get(index: Int): BitByte =
     bitBytes[index]
 
+  fun getBit(index: Int): Boolean =
+    bitBytes[index / 8][7 - (index % 8)]
+
 
   fun zip(other: BitByteList, function: (BitByte, BitByte) -> BitByte): BitByteList =
     if (this.byteN == other.byteN) {

@@ -1,0 +1,245 @@
+{
+  "resources": {
+    "collector": {
+      "name": "VM -1 - Task Collector",
+      "value": 90.9,
+      "attackGain": 10.0,
+      "defenseCost": {
+        "rsa": 20.0,
+        "av": 0.53,
+        "fw": 1.06,
+        "esc": 90.0,
+        "sha": 18.4,
+        "cup": 54.0
+      },
+      "attackCost": {
+        "inj": 1.0,
+        "dos": 2.0,
+        "mod": 2.0,
+        "ddos": 1.0,
+        "loss": 2.0,
+        "hij": 5.0,
+        "perm": 9.0
+      }
+    },
+    "scheduler": {
+      "name": "VM 0 - Task Scheduler",
+      "value": 111.4,
+      "attackGain": 60.0,
+      "defenseCost": {
+        "rsa": 20.0,
+        "av": 0.53,
+        "fw": 1.06,
+        "esc": 90.0,
+        "sha": 18.4,
+        "cup": 54.0
+      },
+      "attackCost": {
+        "inj": 2.0,
+        "dos": 4.0,
+        "mod": 2.0,
+        "ddos": 1.0,
+        "loss": 2.0,
+        "hij": 5.0,
+        "perm": 50.0
+      }
+    },
+    "vm1": {
+      "name": "VM 1-20",
+      "value": 106.8,
+      "attackGain": 10.0,
+      "defenseCost": {
+        "rsa": 20.0,
+        "av": 0.53,
+        "fw": 1.06,
+        "esc": 90.0,
+        "sha": 18.4,
+        "cup": 54.0
+      },
+      "attackCost": {
+        "inj": 3.0,
+        "dos": 6.0,
+        "mod": 2.0,
+        "ddos": 1.0,
+        "loss": 2.0,
+        "hij": 10.0,
+        "perm": 9.0
+      }
+    },
+    "vm2": {
+      "name": "VM 21-40",
+      "value": 114.6,
+      "attackGain": 20.0,
+      "defenseCost": {
+        "rsa": 18.0,
+        "av": 0.57,
+        "fw": 1.14,
+        "esc": 93.0,
+        "sha": 14.0,
+        "cup": 56.0
+      },
+      "attackCost": {
+        "inj": 10.0,
+        "dos": 10.0,
+        "mod": 12.0,
+        "ddos": 1.0,
+        "loss": 12.0,
+        "hij": 15.0,
+        "perm": 18.0
+      }
+    },
+    "vm3": {
+      "name": "VM 41-60",
+      "value": 130.0,
+      "attackGain": 30.0,
+      "defenseCost": {
+        "rsa": 12.0,
+        "av": 0.65,
+        "fw": 1.3,
+        "esc": 100.0,
+        "sha": 12.0,
+        "cup": 60.0
+      },
+      "attackCost": {
+        "inj": 10.0,
+        "dos": 10.0,
+        "mod": 12.0,
+        "ddos": 2.0,
+        "loss": 12.0,
+        "hij": 20.0,
+        "perm": 25.0
+      }
+    },
+    "vm4": {
+      "name": "VM 61-80",
+      "value": 200.0,
+      "attackGain": 40.0,
+      "defenseCost": {
+        "rsa": 10.0,
+        "av": 1.0,
+        "fw": 2.0,
+        "esc": 150.0,
+        "sha": 3.4,
+        "cup": 90
+      },
+      "attackCost": {
+        "inj": 10.0,
+        "dos": 10.0,
+        "mod": 12.0,
+        "ddos": 3.0,
+        "loss": 12.0,
+        "hij": 25.0,
+        "perm": 35.0
+      }
+    },
+    "vm5": {
+      "name": "VM 81-100",
+      "value": 290.0,
+      "attackGain": 50.0,
+      "defenseCost": {
+        "rsa": 6.5,
+        "av": 1.45,
+        "fw": 2.9,
+        "esc": 200.0,
+        "sha": 2.0,
+        "cup": 120.0
+      },
+      "attackCost": {
+        "inj": 10.0,
+        "dos": 10.0,
+        "mod": 12.0,
+        "ddos": 4.0,
+        "loss": 12.0,
+        "hij": 30.0,
+        "perm": 45.0
+      }
+    }
+  },
+  "defences": {
+    "rsa": "1. RSA signature",
+    "av": "2. Antivirus",
+    "fw": "3. Firewall",
+    "esc": "4. Escaping routes",
+    "sha": "5. Task integrity checking",
+    "cup": "6. Energy cupping"
+  },
+  "attacks": {
+    "inj": {
+      "name": "1. Task injection",
+      "chance": {
+        "rsa": 0.0,
+        "av": 0.95,
+        "fw": 0.95,
+        "esc": 0.95,
+        "sha": 0.95,
+        "cup": 0.95
+      }
+    },
+    "dos": {
+      "name": "2. DoS - flooding system with small tasks",
+      "chance": {
+        "rsa": 0.95,
+        "av": 0.9,
+        "fw": 0.0,
+        "esc": 0.0,
+        "sha": 0.9,
+        "cup": 0.9
+      }
+    },
+    "mod": {
+      "name": "3. Unauthorised task modification",
+      "chance": {
+        "rsa": 0.9,
+        "av": 0.6,
+        "fw": 0.6,
+        "esc": 0.6,
+        "sha": 0.6,
+        "cup": 0.6
+      }
+    },
+    "ddos": {
+      "name": "4. DDoS - flooding system with requests",
+      "chance": {
+        "rsa": 0.8,
+        "av": 0.0,
+        "fw": 0.8,
+        "esc": 0.0,
+        "sha": 0.8,
+        "cup": 0.8
+      }
+    },
+    "loss": {
+      "name": "5. Task loss",
+      "chance": {
+        "rsa": 0.0,
+        "av": 1.0,
+        "fw": 1.0,
+        "esc": 0.0,
+        "sha": 1.0,
+        "cup": 1.0
+      }
+    },
+    "hij": {
+      "name": "6. Energy DoS - growing number and frequency of tasks",
+      "chance": {
+        "rsa": 1.0,
+        "av": 1.0,
+        "fw": 1.0,
+        "esc": 0.0,
+        "sha": 1.0,
+        "cup": 0.0
+      }
+    },
+    "perm": {
+      "name": "7. Permanent DoS - service does not work anymore",
+      "chance": {
+        "rsa": 0.5,
+        "av": 0.5,
+        "fw": 0.5,
+        "esc": 0.0,
+        "sha": 0.5,
+        "cup": 0.5
+      }
+    }
+  }
+}
